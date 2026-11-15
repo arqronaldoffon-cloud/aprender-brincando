@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Aprender Brincando – Reforço 1º ao 5º ano</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff8e7; --card:#ffffff; --ink:#2d2a4a; --soft:#6b6888; --line:#efe6cf;
+  --sun:#ffc93c; --sky:#4f8cff; --ok:#2bb673; --bad:#ff5d5d; --pop:#ff7a59;
+  --r:22px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Baloo 2",ui-rounded,"Segoe UI",system-ui,sans-serif;font-size:18px;line-height:1.35}
+button{font:inherit;color:inherit;border:0;cursor:pointer}
+.wrap{max-width:720px;margin:0 auto;padding:14px 14px 90px}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.top h1{font-size:22px;margin:0;flex:1;font-weight:800;line-height:1.1}
+.pill{background:#fff;border:2px solid var(--line);border-radius:999px;padding:4px 12px;font-weight:700;white-space:nowrap}
+.back{background:#fff;border:2px solid var(--line);border-radius:14px;width:44px;height:44px;font-size:22px;flex:none}
+.hello{background:linear-gradient(135deg,#ffd86b,#ffb03c);border-radius:var(--r);padding:16px 18px;display:flex;gap:14px;align-items:center;margin-bottom:16px;box-shadow:0 6px 0 #e79a22}
+.hello .av{font-size:52px;line-height:1}
+.hello b{font-size:24px;display:block;line-height:1.1}
+.sec{font-weight:800;font-size:19px;margin:18px 4px 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.tile{background:var(--card);border-radius:var(--r);padding:14px 12px;text-align:left;box-shadow:0 5px 0 var(--line);border:2px solid var(--line);display:flex;flex-direction:column;gap:2px;min-height:108px;transition:transform .08s}
+.tile:active{transform:translateY(3px);box-shadow:0 2px 0 var(--line)}
+.tile .e{font-size:36px;line-height:1.1}
+.tile b{font-size:18px;line-height:1.1}
+.tile small{color:var(--soft);font-size:14px}
+.bar{height:8px;background:#f1ecdf;border-radius:9px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;border-radius:9px}
+.btn{display:block;width:100%;padding:14px 16px;border-radius:18px;font-weight:800;font-size:19px;background:var(--sky);color:#fff;box-shadow:0 5px 0 #2e63c9;margin:10px 0}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #2e63c9}
+.btn.alt{background:#fff;color:var(--ink);border:2px solid var(--line);box-shadow:0 5px 0 var(--line)}
+.btn.go{background:var(--ok);box-shadow:0 5px 0 #1d8a55}
+.btn.warm{background:var(--pop);box-shadow:0 5px 0 #d5583a}
+.card{background:#fff;border:2px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.q{font-size:22px;font-weight:700;line-height:1.25;margin:6px 0 12px}
+.big{font-size:72px;text-align:center;line-height:1.1;margin:4px 0}
+.opts{display:grid;gap:10px}
+.opt{background:#fff;border:3px solid var(--line);border-radius:18px;padding:12px 14px;font-size:20px;font-weight:700;text-align:left;box-shadow:0 4px 0 var(--line)}
+.opt.ok{border-color:var(--ok);background:#e6f8ef}
+.opt.no{border-color:var(--bad);background:#ffecec}
+.opt[disabled]{cursor:default}
+.prog{display:flex;gap:6px;margin:4px 0 10px}
+.prog i{flex:1;height:10px;border-radius:9px;background:#efe6cf}
+.prog i.d{background:var(--sun)}
+.speak{background:#eef3ff;border-radius:14px;padding:6px 12px;font-weight:700;font-size:16px;color:#2e63c9}
+.fb{font-weight:800;font-size:20px;margin-top:10px;min-height:28px}
+.story{font-size:21px;line-height:1.6;white-space:pre-line}
+.blur{filter:blur(7px);user-select:none}
+input[type=text]{width:100%;font:inherit;font-size:26px;padding:12px 14px;border-radius:16px;border:3px solid var(--line);text-align:center;font-weight:700;color:var(--ink);background:#fff}
+input[type=text]:focus{outline:none;border-color:var(--sky)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.chip{background:#fff;border:3px solid var(--line);border-radius:14px;padding:8px 14px;font-weight:800}
+.chip.on{border-color:var(--sky);background:#eef3ff}
+.avs{display:flex;flex-wrap:wrap;gap:8px}
+.avs button{font-size:34px;width:58px;height:58px;border-radius:16px;background:#fff;border:3px solid var(--line)}
+.avs button.on{border-color:var(--sun);background:#fff4d1}
+.profile{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid var(--line);border-radius:var(--r);padding:12px 14px;margin-bottom:10px;width:100%;text-align:left;box-shadow:0 4px 0 var(--line)}
+.profile .av{font-size:40px}
+.profile b{font-size:20px}
+canvas{display:block;width:100%;background:#fff;border-radius:18px;border:3px solid var(--line);touch-action:none}
+.colors{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.colors button{width:38px;height:38px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px var(--line)}
+.colors button.on{box-shadow:0 0 0 3px var(--ink)}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px}
+.gal img{width:100%;border-radius:12px;border:2px solid var(--line);background:#fff}
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.stat div{background:#fff;border:2px solid var(--line);border-radius:18px;padding:10px;text-align:center}
+.stat b{display:block;font-size:26px;line-height:1.1}
+.stat small{color:var(--soft);font-size:13px}
+.lrow{display:flex;align-items:center;gap:10px;margin:8px 0}
+.lrow span:first-child{width:118px;font-weight:700;font-size:16px}
+.lrow .bar{flex:1;margin:0;height:14px}
+.lrow em{font-style:normal;width:64px;text-align:right;font-size:15px;color:var(--soft)}
+.tip{background:#fff4d1;border-radius:14px;padding:10px 12px;margin:6px 0;font-size:16px}
+.muted{color:var(--soft);font-size:15px}
+.hide{display:none!important}
+.star-pop{position:fixed;left:50%;top:40%;font-size:60px;white-space:nowrap;font-weight:800;transform:translate(-50%,-50%) scale(.2);opacity:0;pointer-events:none;transition:all .45s cubic-bezier(.2,1.6,.4,1);z-index:9}
+.star-pop.show{transform:translate(-50%,-50%) scale(1);opacity:1}
+.modal{position:fixed;inset:0;background:rgba(45,42,74,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:8}
+.modal .card{max-width:420px;width:100%}
+table{width:100%;border-collapse:collapse;font-size:15px}
+td,th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="star-pop" id="pop">⭐</div>
+
+<script>
+/* =========================================================
+   APRENDER BRINCANDO — protótipo de app de reforço escolar
+   1º ao 5º ano · Mat, Port, Ciências, História, Geografia,
+   Inglês e Espanhol · jogos, leitura, ditado, desenho, painel
+   ========================================================= */
+
+// ---------- armazenamento (local, com fallback em memória) ----------
+const KEY = 'aprender-brincando-v1';
+let DB = {profiles: [], current: null};
+function load(){ try{ const s = localStorage.getItem(KEY); if(s) DB = JSON.parse(s); }catch(e){} }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(DB)); }catch(e){} }
+load();
+const me = () => DB.profiles.find(p => p.id === DB.current);
+
+// ---------- utilidades ----------
+const $ = s => document.querySelector(s);
+const app = $('#app');
+const rnd = n => Math.floor(Math.random()*n);
+const pick = a => a[rnd(a.length)];
+const shuffle = a => { a = a.slice(); for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];} return a; };
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const noAcc = s => s.normalize('NFD').replace(/[̀-ͯ]/g,'');
+const hoje = () => new Date().toLocaleDateString('pt-BR');
+
+function falar(texto, lang='pt-BR'){
+  try{
+    const ss = window.speechSynthesis; if(!ss) return;
+    ss.cancel();
+    const u = new SpeechSynthesisUtterance(texto);
+    u.lang = lang; u.rate = lang==='pt-BR' ? .9 : .8;
+    const v = ss.getVoices().find(v => v.lang.replace('_','-').toLowerCase().startsWith(lang.toLowerCase().slice(0,2)) && v.lang.toLowerCase().includes(lang.slice(3).toLowerCase()))
+           || ss.getVoices().find(v => v.lang.toLowerCase().startsWith(lang.slice(0,2)));
+    if(v) u.voice = v;
+    ss.speak(u);
+  }catch(e){}
+}
+function estrela(txt='⭐'){
+  const p = $('#pop'); p.textContent = txt; p.classList.add('show');
+  setTimeout(()=>p.classList.remove('show'), 550);
+}
+
+// ---------- matérias ----------
+const MAT = {
+  mat:{n:'Matemática', e:'🔢', c:'#ff7a59'},
+  por:{n:'Português',  e:'📝', c:'#4f8cff'},
+  cie:{n:'Ciências',   e:'🔬', c:'#2bb673'},
+  his:{n:'História',   e:'🏛️', c:'#b9773a'},
+  geo:{n:'Geografia',  e:'🌎', c:'#14a3b8'},
+  ing:{n:'Inglês',     e:'🇺🇸', c:'#8a5cf6'},
+  esp:{n:'Espanhol',   e:'🇪🇸', c:'#e84a8a'},
+};
+
+// ---------- MATEMÁTICA (gerada pelo ano) ----------
+function opcoesNum(certo, spread){
+  const s = new Set([certo]);
+  while(s.size < 4){ const d = certo + (rnd(2*spread+1) - spread); if(d >= 0 && d !== certo) s.add(d); }
+  return shuffle([...s]).map(String);
+}
+function qMat(ano){
+  const tipo = rnd(3);
+  let q, r, e='', sp=3, d='';
+  const soma=(a,b)=>`Junte as quantidades: ${a} e mais ${b}. Comece no ${Math.max(a,b)} e conte mais ${Math.min(a,b)}: dá ${a+b}.`;
+  const sub=(a,b)=>`Tirar ${b} de ${a}: comece no ${a} e volte ${b} passos. Para conferir: ${a-b} + ${b} = ${a}.`;
+  const mult=(m,n)=>`${m} × ${n} é somar o ${n} ${m} vezes${m<=5?': '+Array(m).fill(n).join(' + '):''} = ${m*n}.`;
+  const div=(t,dv,res)=>`Dividir ${t} por ${dv} é repartir em ${dv} grupos iguais. Pense: ${dv} × ? = ${t}. Como ${dv} × ${res} = ${t}, a resposta é ${res}.`;
+  if(ano === 1){
+    if(tipo===0){ const n = 2+rnd(7), em = pick(['🍎','⭐','🐟','🎈','🚗']); e = em.repeat(n); q='Quantos tem?'; r=n; sp=2; d=`Aponte o dedo em cada um e conte devagar: 1, 2, 3… até ${n}.`; }
+    else if(tipo===1){ const a=1+rnd(9), b=1+rnd(10-a); q=`${a} + ${b} = ?`; r=a+b; d=soma(a,b); }
+    else { const a=3+rnd(8), b=1+rnd(a-1); q=`${a} − ${b} = ?`; r=a-b; sp=2; d=sub(a,b); }
+  } else if(ano === 2){
+    if(tipo===0){ const a=10+rnd(40), b=5+rnd(40); q=`${a} + ${b} = ?`; r=a+b; sp=10; d=`Some as dezenas e depois as unidades: ${Math.floor(a/10)*10} + ${Math.floor(b/10)*10} = ${Math.floor(a/10)*10+Math.floor(b/10)*10}; ${a%10} + ${b%10} = ${a%10+b%10}. Juntando: ${a+b}.`; }
+    else if(tipo===1){ const a=30+rnd(60), b=5+rnd(25); q=`${a} − ${b} = ?`; r=a-b; sp=10; d=sub(a,b); }
+    else { const m=pick([2,5,10]), n=1+rnd(10); q=`${m} × ${n} = ?`; r=m*n; sp=m; d=mult(m,n); }
+  } else if(ano === 3){
+    if(tipo===0){ const m=2+rnd(4), n=1+rnd(10); q=`${m} × ${n} = ?`; r=m*n; sp=m; d=mult(m,n); }
+    else if(tipo===1){ const a=100+rnd(500), b=50+rnd(300); q=`${a} + ${b} = ?`; r=a+b; sp=20; d=`Arme a conta: some unidades, depois dezenas, depois centenas, lembrando do "vai um". ${a} + ${b} = ${a+b}.`; }
+    else { const n=2*(5+rnd(45)); q=`Qual é a metade de ${n}?`; r=n/2; sp=5; d=`Metade é dividir em 2 partes iguais: ${n/2} + ${n/2} = ${n}.`; }
+  } else if(ano === 4){
+    if(tipo===0){ const m=6+rnd(4), n=2+rnd(9); q=`${m} × ${n} = ?`; r=m*n; sp=m; d=mult(m,n)+` Dica: ${m} × ${n} = ${m} × ${n-1} + ${m}.`; }
+    else if(tipo===1){ const dv=2+rnd(8), n=2+rnd(9); q=`${dv*n} ÷ ${dv} = ?`; r=n; sp=3; d=div(dv*n,dv,n); }
+    else { const k=pick([2,3,4]), n=k*(2+rnd(10)); q=`Quanto é 1/${k} de ${n}?`; r=n/k; sp=4; d=`1/${k} é uma das ${k} partes iguais: ${n} ÷ ${k} = ${n/k}.`; }
+  } else {
+    if(tipo===0){ const a=12+rnd(80), b=3+rnd(7); q=`${a} × ${b} = ?`; r=a*b; sp=15; const dz=Math.floor(a/10)*10, un=a%10; d=`Separe o ${a} em ${dz} + ${un}: ${dz} × ${b} = ${dz*b} e ${un} × ${b} = ${un*b}. Somando: ${a*b}.`; }
+    else if(tipo===1){ const pc=pick([10,25,50]), n=pick([20,40,60,80,100,200,120]); q=`Quanto é ${pc}% de ${n}?`; r=n*pc/100; sp=10; d= pc===50?`50% é a metade: ${n} ÷ 2 = ${r}.`: pc===25?`25% é um quarto: ${n} ÷ 4 = ${r}.`:`10% é dividir por 10: ${n} ÷ 10 = ${r}.`; }
+    else { const dv=3+rnd(7), n=11+rnd(30); q=`${dv*n} ÷ ${dv} = ?`; r=n; sp=6; d=div(dv*n,dv,n); }
+  }
+  return {q, e, o: opcoesNum(r, sp), a: String(r), d};
+}
+
+// ---------- BANCOS DE PERGUNTAS (a = ano mínimo, b = ano máximo) ----------
+const BANK = {
+por: [
+ {a:2,b:3,q:'Qual palavra está escrita certo?',c:'cachorro',w:['caxorro','cachoro','kachorro']},
+ {a:2,b:3,q:'Qual palavra rima com "pão"?',c:'mão',w:['pé','bola','casa']},
+ {a:2,b:4,q:'Qual é o plural de "flor"?',c:'flores',w:['flors','floris','flor']},
+ {a:3,b:4,q:'Qual é o contrário de "alto"?',c:'baixo',w:['grande','forte','rápido']},
+ {a:3,b:4,q:'Qual palavra é um substantivo (nome)?',c:'girafa',w:['correr','bonito','depressa']},
+ {a:3,b:4,q:'Como se separa "pássaro"?',c:'pás-sa-ro',w:['pá-ssa-ro','pass-a-ro','p-ás-sa-ro']},
+ {a:3,b:5,q:'Na frase "O menino corre", qual palavra é o verbo?',c:'corre',w:['O','menino','nenhuma']},
+ {a:4,b:5,q:'Qual palavra é um adjetivo?',c:'feliz',w:['mesa','pular','ontem']},
+ {a:4,b:5,q:'Qual é o sinônimo de "contente"?',c:'alegre',w:['triste','bravo','cansado']},
+ {a:4,b:5,q:'Qual palavra está acentuada corretamente?',c:'você',w:['vóce','vocé','voçe']},
+ {a:5,b:5,q:'"Ontem eu brinquei no parque." O verbo está no…',c:'passado',w:['presente','futuro','infinitivo']},
+ {a:5,b:5,q:'Qual frase é uma pergunta?',c:'Você vem amanhã?',w:['Que dia lindo!','Eu vou à escola.','Feche a porta.']},
+ {a:5,b:5,q:'Qual frase está com a concordância correta?',c:'Os meninos jogaram bola.',w:['Os menino jogou bola.','O meninos jogaram bola.','Os meninos jogou bola.']},
+],
+cie: [
+ {a:1,b:2,q:'Qual destes é um ser vivo?',c:'🌳 Árvore',w:['🪨 Pedra','🧸 Ursinho','🚗 Carro']},
+ {a:1,b:2,q:'Qual sentido usamos para sentir cheiro?',c:'👃 Olfato',w:['👀 Visão','👂 Audição','✋ Tato']},
+ {a:1,b:2,q:'Qual animal vive na água?',c:'🐟 Peixe',w:['🐄 Vaca','🐓 Galinha','🐒 Macaco']},
+ {a:1,b:3,q:'O que as plantas precisam para viver?',c:'Água, luz e ar',w:['Só chocolate','Só escuridão','Só areia']},
+ {a:2,b:3,q:'Qual alimento é mais saudável?',c:'🍎 Fruta',w:['🍬 Bala','🍟 Batata frita','🥤 Refrigerante']},
+ {a:2,b:4,q:'Qual material é atraído pelo ímã?',c:'Ferro',w:['Madeira','Papel','Plástico']},
+ {a:3,b:4,q:'O que acontece com a água quando ferve?',c:'Vira vapor',w:['Vira gelo','Vira areia','Some para sempre']},
+ {a:3,b:5,q:'Animais que comem só plantas são chamados de…',c:'Herbívoros',w:['Carnívoros','Onívoros','Insetos']},
+ {a:3,b:5,q:'Qual é a estrela mais próxima da Terra?',c:'O Sol',w:['A Lua','Marte','Vênus']},
+ {a:4,b:5,q:'Qual órgão bombeia o sangue pelo corpo?',c:'Coração',w:['Pulmão','Estômago','Rim']},
+ {a:4,b:5,q:'Quanto tempo a Terra leva para dar uma volta em torno do Sol?',c:'Cerca de 1 ano',w:['1 dia','1 mês','1 semana']},
+ {a:4,b:5,q:'Na fotossíntese, as plantas liberam um gás que respiramos. Qual?',c:'Oxigênio',w:['Gás carbônico','Fumaça','Sal']},
+ {a:5,b:5,q:'Água e óleo juntos formam uma mistura…',c:'Heterogênea (dá para ver as partes)',w:['Homogênea','Invisível','Sólida']},
+],
+his: [
+ {a:1,b:2,q:'Quem faz parte da nossa família?',c:'Pessoas que cuidam de nós e convivem conosco',w:['Só os vizinhos','Só os professores','Só os animais da rua']},
+ {a:1,b:2,q:'O que é a certidão de nascimento?',c:'Documento que registra quando e onde nascemos',w:['Um brinquedo','Uma receita','Um mapa']},
+ {a:1,b:3,q:'Antes do celular, como as pessoas mandavam mensagens para longe?',c:'✉️ Por cartas',w:['🎮 Por videogame','📺 Pela televisão','🧊 Pela geladeira']},
+ {a:2,b:3,q:'Uma linha do tempo serve para…',c:'Organizar acontecimentos em ordem',w:['Medir o peso','Desenhar animais','Contar dinheiro']},
+ {a:2,b:4,q:'Museus servem para…',c:'Guardar e mostrar objetos e histórias do passado',w:['Vender comida','Plantar árvores','Consertar carros']},
+ {a:3,b:4,q:'Quem já vivia no Brasil antes da chegada dos portugueses?',c:'Os povos indígenas',w:['Os astronautas','Os vikings','Ninguém']},
+ {a:3,b:5,q:'Em que ano os portugueses chegaram ao Brasil?',c:'1500',w:['1822','1888','1950']},
+ {a:4,b:5,q:'A Independência do Brasil foi proclamada em…',c:'1822',w:['1500','1889','2000']},
+ {a:4,b:5,q:'A Lei Áurea, de 1888, aboliu…',c:'A escravidão no Brasil',w:['As escolas','O futebol','As eleições']},
+ {a:4,b:5,q:'A capoeira foi criada no Brasil por…',c:'Africanos escravizados e seus descendentes',w:['Astronautas','Os romanos','Os vikings']},
+ {a:5,b:5,q:'O Brasil se tornou uma república em…',c:'1889',w:['1500','1822','1964']},
+ {a:5,b:5,q:'Brasília se tornou a capital do Brasil em…',c:'1960',w:['1500','1822','1889']},
+],
+geo: [
+ {a:1,b:2,q:'Qual destes é um meio de transporte?',c:'🚌 Ônibus',w:['🍌 Banana','🛏️ Cama','📚 Livro']},
+ {a:1,b:2,q:'Qual destes é um elemento da natureza?',c:'🌊 Rio',w:['🏢 Prédio','🚦 Semáforo','🛒 Carrinho']},
+ {a:1,b:3,q:'O lugar onde moramos com a família é a…',c:'🏠 Moradia',w:['🌲 Floresta','🏖️ Praia','🌙 Lua']},
+ {a:2,b:3,q:'Um mapa serve para…',c:'Mostrar lugares e caminhos',w:['Cozinhar','Medir a febre','Tocar música']},
+ {a:2,b:4,q:'Onde geralmente há mais plantações?',c:'No campo',w:['Na cidade','No shopping','No aeroporto']},
+ {a:3,b:4,q:'Qual é a capital do Brasil?',c:'Brasília',w:['São Paulo','Rio de Janeiro','Salvador']},
+ {a:3,b:5,q:'Quantas regiões tem o Brasil?',c:'5',w:['3','7','27']},
+ {a:3,b:5,q:'Qual é a capital de Minas Gerais?',c:'Belo Horizonte',w:['Ouro Preto','Juiz de Fora','Uberlândia']},
+ {a:4,b:5,q:'Os pontos cardeais são…',c:'Norte, Sul, Leste e Oeste',w:['Frente, trás, cima e baixo','Manhã, tarde, noite e madrugada','Verão, inverno, outono e primavera']},
+ {a:4,b:5,q:'A Floresta Amazônica fica principalmente na região…',c:'Norte',w:['Sul','Sudeste','Centro-Oeste']},
+ {a:4,b:5,q:'O maior rio do Brasil em volume de água é o…',c:'Rio Amazonas',w:['Rio São Francisco','Rio Tietê','Rio Doce']},
+ {a:5,b:5,q:'Qual país tem mais habitantes na América do Sul?',c:'Brasil',w:['Argentina','Chile','Uruguai']},
+],
+};
+function fromBank(sub, ano){
+  let pool = BANK[sub].filter(x => x.a <= ano && ano <= x.b);
+  if(pool.length < 5) pool = BANK[sub].slice().sort((x,y)=>Math.abs((x.a+x.b)/2-ano)-Math.abs((y.a+y.b)/2-ano)).slice(0,8);
+  return shuffle(pool).map(x => ({q:x.q, o:shuffle([x.c,...x.w]), a:x.c}));
+}
+
+// Português gerado (alfabetização, 1º–3º ano)
+const PALAVRAS = [
+ ['GATO','🐱','GA-TO'],['BOLA','⚽','BO-LA'],['CASA','🏠','CA-SA'],['PATO','🦆','PA-TO'],['SAPO','🐸','SA-PO'],
+ ['UVA','🍇','U-VA'],['LUA','🌙','LU-A'],['DADO','🎲','DA-DO'],['MACACO','🐒','MA-CA-CO'],['ABELHA','🐝','A-BE-LHA'],
+ ['ELEFANTE','🐘','E-LE-FAN-TE'],['NAVIO','🚢','NA-VI-O'],['TOMATE','🍅','TO-MA-TE'],['RATO','🐭','RA-TO'],
+ ['VACA','🐄','VA-CA'],['JACARÉ','🐊','JA-CA-RÉ'],['OVO','🥚','O-VO'],['ZEBRA','🦓','ZE-BRA'],['PIPOCA','🍿','PI-PO-CA'],['FOGUETE','🚀','FO-GUE-TE']
+];
+function qPorGerada(ano){
+  const [w, e, sil] = pick(PALAVRAS);
+  if(ano === 1 && Math.random() < .6){
+    const letras = new Set([w[0]]); while(letras.size<4) letras.add(pick('ABCDEFGJLMNOPRSTUVZ'.split('')));
+    return {q:'Com qual letra começa?', e, o:shuffle([...letras]), a:w[0], say:{t:noAcc(w).toLowerCase(),l:'pt-BR'}, d:`Fale devagar: ${w}. O primeiro som é de ${w[0]}.`};
+  }
+  const n = sil.split('-').length;
+  return {q:`Quantas sílabas tem ${w}?`, e, o: n<=4 ? ['1','2','3','4'] : ['2','3','4','5'], a:String(n), d:`Bata uma palma para cada pedacinho: ${sil}. São ${n} palmas, ${n} sílabas.`};
+}
+
+// ---------- INGLÊS / ESPANHOL ----------
+const VOC = [
+ ['🍎','maçã','apple','manzana'],['🐶','cachorro','dog','perro'],['🐱','gato','cat','gato'],['🏠','casa','house','casa'],
+ ['☀️','sol','sun','sol'],['🌙','lua','moon','luna'],['📚','livro','book','libro'],['💧','água','water','agua'],
+ ['🚗','carro','car','coche'],['⚽','bola','ball','pelota'],['🐟','peixe','fish','pez'],['🌳','árvore','tree','árbol'],
+ ['✋','mão','hand','mano'],['🔴','vermelho','red','rojo'],['🔵','azul','blue','azul'],['🟢','verde','green','verde'],
+ ['🟡','amarelo','yellow','amarillo'],['🏫','escola','school','escuela'],['🐦','pássaro','bird','pájaro'],
+ ['🍞','pão','bread','pan'],['🥛','leite','milk','leche'],['🌧️','chuva','rain','lluvia'],['👀','olhos','eyes','ojos'],['🍌','banana','banana','plátano']
+];
+const NUM = {ing:['one','two','three','four','five','six','seven','eight','nine','ten'], esp:['uno','dos','tres','cuatro','cinco','seis','siete','ocho','nueve','diez']};
+const FRASES = [
+ ['Bom dia','Good morning','Buenos días'],['Obrigado(a)','Thank you','Gracias'],['Como você está?','How are you?','¿Cómo estás?'],
+ ['Meu nome é…','My name is…','Me llamo…'],['Tchau','Goodbye','Adiós'],['Por favor','Please','Por favor'],['Eu gosto de…','I like…','Me gusta…'],['Boa noite','Good night','Buenas noches']
+];
+function qLang(sub, ano){
+  const i = sub==='ing' ? 2 : 3, lang = sub==='ing' ? 'en-US' : 'es-ES', nome = sub==='ing' ? 'inglês' : 'espanhol';
+  const tipos = ['palavra'];
+  if(ano >= 2) tipos.push('significado');
+  if(ano <= 3) tipos.push('numero');
+  if(ano >= 3) tipos.push('frase','frase');
+  const t = pick(tipos);
+  if(t==='palavra'){
+    const v = pick(VOC), outros = shuffle(VOC.filter(x=>x!==v)).slice(0,3).map(x=>x[i]);
+    return {q:`Como se diz "${v[1]}" em ${nome}?`, e:v[0], o:shuffle([v[i],...outros]), a:v[i], say:{t:v[i],l:lang}, d:`${v[0]} ${v[1]} em ${nome} é "${v[i]}". Ouça e repita 3 vezes em voz alta!`};
+  }
+  if(t==='significado'){
+    const v = pick(VOC), outros = shuffle(VOC.filter(x=>x!==v)).slice(0,3);
+    return {q:`O que significa "${v[i]}"?`, o:shuffle([v,...outros]).map(x=>x[0]+' '+x[1]), a:v[0]+' '+v[1], say:{t:v[i],l:lang}, auto:true, d:`"${v[i]}" quer dizer ${v[1]} ${v[0]}. Tente imaginar a figura quando ouvir a palavra.`};
+  }
+  if(t==='numero'){
+    const n = rnd(10), outros = shuffle(NUM[sub].filter((_,k)=>k!==n)).slice(0,3);
+    return {q:`Como se diz o número ${n+1} em ${nome}?`, e:String(n+1), o:shuffle([NUM[sub][n],...outros]), a:NUM[sub][n], say:{t:NUM[sub][n],l:lang}, d:`Conte em ${nome}: ${NUM[sub].slice(0,n+1).join(', ')}.`};
+  }
+  const f = pick(FRASES), outros = shuffle(FRASES.filter(x=>x!==f)).slice(0,3).map(x=>x[0]);
+  return {q:`O que significa "${f[i-1]}"?`, o:shuffle([f[0],...outros]), a:f[0], say:{t:f[i-1],l:lang}, auto:true, d:`"${f[i-1]}" = "${f[0]}". Use essa frase hoje com alguém da sua casa!`};
+}
+
+function gerarRodada(sub, ano, n=5){
+  const out = [];
+  if(sub==='mat'){ for(let k=0;k<n;k++) out.push(qMat(ano)); }
+  else if(sub==='ing' || sub==='esp'){ for(let k=0;k<n;k++) out.push(qLang(sub, ano)); }
+  else if(sub==='por'){
+    const banco = fromBank('por', ano);
+    const nGer = ano===1 ? n : ano<=3 ? 2 : 0;
+    for(let k=0;k<nGer;k++) out.push(qPorGerada(ano));
+    out.push(...banco.slice(0, n-out.length));
+    while(out.length<n) out.push(qPorGerada(ano));
+  }
+  else out.push(...fromBank(sub, ano).slice(0,n));
+  return shuffle(out);
+}
+
+// ---------- LEITURA (textos originais por ano) ----------
+const HISTORIAS = [
+ {ano:1, t:'O gato Tito', e:'🐱', txt:'Tito é um gato. Tito é amarelo. Ele gosta de leite. Um dia, Tito viu uma bola. A bola rolou. Tito correu atrás da bola. Que gato levado! Depois, Tito tomou leite e foi dormir.',
+  qs:[['De que cor é o Tito?','amarelo',['preto','azul']],['O que o Tito gosta de tomar?','leite',['suco','refrigerante']],['O que Tito fez no final?','foi dormir',['foi nadar','foi cantar']]]},
+ {ano:2, t:'A horta da escola', e:'🥬', txt:'Na escola de Lia tem uma horta. Toda segunda-feira, a turma rega as plantas. Lia cuida dos tomates e Pedro cuida das alfaces.\nUm dia, as folhas da alface apareceram furadas.\n— Quem comeu a nossa alface? — perguntou Pedro.\nA professora mostrou uma lagarta verde escondida embaixo de uma folha. As crianças levaram a lagarta para um canto do jardim. Semanas depois, ela virou uma linda borboleta.',
+  qs:[['Quem cuida dos tomates?','Lia',['Pedro','A professora']],['Quem furou as folhas da alface?','Uma lagarta',['Um gato','A chuva']],['Em que a lagarta se transformou?','Em borboleta',['Em abelha','Em formiga']]]},
+ {ano:3, t:'A viagem da Gotinha', e:'💧', txt:'Gotinha morava em um lago tranquilo. Numa manhã quente, o Sol esquentou tanto a água que Gotinha ficou leve, leve, e subiu para o céu como vapor.\nLá em cima, encontrou outras gotinhas e, juntas, formaram uma nuvem grande e cinzenta. O vento empurrou a nuvem para cima de uma montanha. Ali fazia frio, e as gotinhas ficaram pesadas. Então caíram em forma de chuva!\nGotinha escorregou por uma folha, desceu pelo riacho e, depois de muitos dias, voltou ao lago.\n— Que viagem! — disse ela. — Amanhã começo tudo de novo.',
+  qs:[['Por que a Gotinha subiu para o céu?','O Sol esquentou a água',['Ela pulou bem alto','Um pássaro a levou']],['O que as gotinhas formaram juntas?','Uma nuvem',['Um rio','Uma pedra']],['O que a última frase mostra?','Que a viagem da água se repete',['Que a Gotinha ficou no céu','Que a Gotinha virou gelo']]]},
+ {ano:4, t:'O mapa do vovô', e:'🗺️', txt:'Nas férias, Caio encontrou no sótão do avô um mapa antigo, desenhado à mão. Havia uma rosa dos ventos no canto e um X vermelho perto de uma figueira.\n— Vovô, isso é um mapa do tesouro? — perguntou, animado.\nO avô sorriu e disse que só havia um jeito de descobrir. Com uma bússola, os dois seguiram as pistas: vinte passos para o norte a partir do portão, depois dez passos para o leste, até a velha figueira do quintal.\nCaio cavou com cuidado e encontrou uma lata enferrujada. Dentro havia fotografias, uma carta e uma bolinha de gude azul.\n— Eu enterrei isso quando tinha a sua idade — contou o avô.\nCaio entendeu que aquele era um tesouro de lembranças, mais valioso que ouro.',
+  qs:[['Que instrumento usaram para se orientar?','Uma bússola',['Uma régua','Um relógio']],['Para que direção andaram primeiro?','Norte',['Sul','Oeste']],['Por que o tesouro era valioso?','Guardava lembranças da infância do avô',['Tinha muito ouro','Era muito pesado']]]},
+ {ano:5, t:'O mistério da biblioteca', e:'🔍', txt:'Todos os dias, às três da tarde, alguém deixava um livro fora do lugar na biblioteca da escola. A bibliotecária, dona Celeste, já estava intrigada.\nMarina, aluna do 5º ano, decidiu investigar. Durante uma semana, anotou em um caderno o horário, o título e a estante de cada livro abandonado. Percebeu um padrão: todos eram livros de astronomia e sempre apareciam na mesa perto da janela.\nNa sexta-feira, Marina se escondeu atrás de uma estante. Às três em ponto, entrou Benjamin, um menino novo na escola, que quase não falava com ninguém. Ele lia um pouco, olhava pela janela e saía apressado, esquecendo o livro.\nNo dia seguinte, Marina sentou-se ao lado dele e perguntou sobre os planetas. Benjamin falou sem parar por meia hora. A partir dali, os livros passaram a voltar para a estante — e a mesa perto da janela ganhou dois leitores.',
+  qs:[['Como Marina investigou o mistério?','Anotou horários, títulos e estantes',['Perguntou à diretora','Colocou uma câmera']],['Qual era o padrão que ela percebeu?','Eram livros de astronomia',['Eram livros de receitas','Eram dicionários']],['O que o final da história sugere?','Marina e Benjamin ficaram amigos',['Benjamin mudou de escola','A biblioteca fechou']]]},
+];
+// referência aproximada de fluência (palavras por minuto, fim do ano) — ajuste com a escola
+const REF_PPM = {1:40, 2:70, 3:90, 4:110, 5:130};
+
+// ---------- DITADO ----------
+const DITADO = {
+ 1:['bola','casa','gato','pato','sapo','mesa','dado','lua','uva','fada'],
+ 2:['escola','cavalo','janela','menino','girafa','sapato','panela','tomate','banana','camelo'],
+ 3:['chuva','galinha','pássaro','trabalho','carro','folha','queijo','nuvem','palhaço','guerra'],
+ 4:['árvore','cachorro','piscina','máquina','ônibus','chocolate','exemplo','pêssego','girassol','açúcar'],
+ 5:['excelente','nascimento','experiência','hipopótamo','admiração','conhecimento','exceção','saudável','geografia','ciência'],
+};
+
+// ---------- DESENHO ----------
+const TEMAS = {
+ mat:['Desenhe 5 frutas e escreva o número 5','Desenhe um círculo, um quadrado e um triângulo'],
+ por:['Desenhe algo que começa com a letra B','Desenhe a cena da sua história favorita'],
+ cie:['Desenhe o ciclo da água','Desenhe uma planta com raiz, caule e folhas'],
+ his:['Desenhe a sua família','Desenhe como era uma casa antigamente'],
+ geo:['Desenhe o caminho da sua casa até a escola','Desenhe uma paisagem do campo'],
+ ing:['Desenhe seu animal favorito e escreva o nome em inglês'],
+ esp:['Desenhe sua fruta favorita e escreva o nome em espanhol'],
+ livre:['Desenho livre! Solte a imaginação']
+};
+
+// ---------- TUTOR ADAPTATIVO (roda no aparelho, sem internet) ----------
+const nivelDe = (p, sub) => (p.nivel && p.nivel[sub]) || p.ano;
+function ajustarNivel(sub, ok, total){
+  const p = me(); p.nivel = p.nivel || {}; p.rodadas = p.rodadas || {};
+  const h = (p.rodadas[sub] = (p.rodadas[sub] || []).concat(ok/total).slice(-2));
+  const n = nivelDe(p, sub);
+  let msg = '';
+  if(h.length === 2 && h.every(v => v >= .8) && n < 5){ p.nivel[sub] = n+1; p.rodadas[sub] = []; msg = `🚀 Você subiu para o <b>nível ${n+1}</b> em ${MAT[sub].n}!`; }
+  else if((ok/total <= .2 || (h.length === 2 && h.every(v => v <= .4))) && n > 1){ p.nivel[sub] = n-1; p.rodadas[sub] = []; msg = `🦉 Vamos fortalecer a base no <b>nível ${n-1}</b> e depois subir de novo.`; }
+  save(); return msg;
+}
+const MIN = 60e3, DIA = 864e5;
+function guardarErro(sub, x){
+  const p = me(); p.revisar = p.revisar || [];
+  if(p.revisar.some(r => r.x.q === x.q && r.x.a === x.a)) return;
+  const {rev, ...limpo} = x;
+  p.revisar.push({id:'r'+Date.now()+rnd(999), sub, x:limpo, due:Date.now()+30*MIN, ac:0});
+  if(p.revisar.length > 60) p.revisar.shift();
+}
+function resultadoRevisao(id, certo){
+  const p = me(), it = (p.revisar||[]).find(r => r.id === id); if(!it) return;
+  if(certo){ it.ac++; if(it.ac >= 2) p.revisar = p.revisar.filter(r => r.id !== id); else it.due = Date.now() + DIA; }
+  else { it.ac = 0; it.due = Date.now() + 30*MIN; }
+}
+const pendentes = (p, sub) => (p.revisar||[]).filter(r => (!sub || r.sub === sub) && r.due <= Date.now());
+
+// ---------- registro de dados ----------
+function registrar(sub, certo){
+  const p = me(); if(!p) return;
+  p.stats[sub] = p.stats[sub] || {ok:0, tot:0};
+  p.stats[sub].tot++; if(certo){ p.stats[sub].ok++; p.estrelas++; ganhar(2, 'Acertos em '+MAT[sub].n); }
+  p.hist = p.hist || []; p.hist.push({d:Date.now(), s:sub, ok:certo?1:0});
+  if(p.hist.length > 500) p.hist.shift();
+  save();
+}
+const pct = s => s && s.tot ? Math.round(100*s.ok/s.tot) : null;
+
+// =========================================================
+// TELAS
+// =========================================================
+function topo(titulo, voltar){
+  const p = me();
+  return `<div class="top">${voltar?`<button class="back" onclick="${voltar}" aria-label="Voltar">←</button>`:''}
+  <h1>${titulo}</h1>${p?`<button class="pill" id="pill" onclick="telaCofrinho()">⭐ ${p.estrelas} · 🪙 ${p.moedas}</button>`:''}</div>`;
+}
+
+// ----- perfis -----
+let novoAv = '🦁', novoAno = 1, novoGen = 'menino';
+function telaPerfis(){
+  const lista = DB.profiles.map(p => `<button class="profile" onclick="entrar('${p.id}')"><span class="av">${p.av}</span><span><b>${esc(p.nome)}</b><br><span class="muted">${p.ano}º ano · ⭐ ${p.estrelas}</span></span></button>`).join('');
+  app.innerHTML = `
+  <div class="top"><h1>🎒 Aprender Brincando</h1></div>
+  <div class="hello"><div class="av">📚</div><div><b>Quem vai brincar hoje?</b><span>Reforço do 1º ao 5º ano</span></div></div>
+  ${lista}
+  <div class="card">
+    <div class="sec" style="margin-top:0">➕ Nova criança</div>
+    <input type="text" id="nome" placeholder="Nome" maxlength="20" style="font-size:22px">
+    <div class="sec">Ano escolar</div>
+    <div class="row">${[1,2,3,4,5].map(a=>`<button class="chip ${a===novoAno?'on':''}" onclick="novoAno=${a};marcar(this)">${a}º</button>`).join('')}</div>
+    <div class="sec">É menino ou menina?</div>
+    <div class="row">${[['menino','👦 Menino'],['menina','👧 Menina']].map(([g,t])=>`<button class="chip ${g===novoGen?'on':''}" onclick="novoGen='${g}';marcar(this)">${t}</button>`).join('')}</div>
+    <div class="sec">Escolha um bichinho</div>
+    <div class="avs">${['🦁','🐼','🦊','🐸','🐙','🦄','🐯','🐨','🐧','🦖'].map(a=>`<button class="${a===novoAv?'on':''}" onclick="novoAv='${a}';marcar(this)">${a}</button>`).join('')}</div>
+    <button class="btn go" onclick="criarPerfil()">Começar! 🚀</button>
+  </div>`;
+}
+function marcar(el){ [...el.parentNode.children].forEach(c=>c.classList.remove('on')); el.classList.add('on'); }
+function criarPerfil(){
+  const nome = $('#nome').value.trim(); if(!nome){ $('#nome').focus(); return; }
+  const p = {id:'p'+Date.now(), nome, ano:novoAno, av:novoAv, genero:novoGen, estrelas:0, stats:{}, leituras:[], ditados:[], desenhos:[], hist:[]};
+  garantir(p); DB.profiles.push(p); DB.current = p.id; save(); telaInicio();
+}
+function entrar(id){ DB.current = id; garantir(me()); aplicarRendimento(me()); save(); telaInicio(); }
+
+// ----- início -----
+function telaInicio(){
+  const p = me(); if(!p) return telaPerfis();
+  const tiles = Object.entries(MAT).map(([k,m]) => {
+    const v = pct(p.stats[k]);
+    return `<button class="tile" onclick="telaMateria('${k}')"><span class="e">${m.e}</span><b>${m.n}</b>
+      <small>${v===null?'Vamos começar!':v+'% de acertos'}</small><div class="bar"><i style="width:${v||0}%;background:${m.c}"></i></div></button>`;
+  }).join('');
+  app.innerHTML = `
+  ${topo('🎒 Aprender Brincando')}
+  <div class="hello"><div onclick="telaAvatar()" style="cursor:pointer;flex:none">${avatarSVG(p,null,70)}</div><div><b>Olá, ${esc(p.nome)}!</b><span>${p.ano}º ano · bora aprender?</span></div></div>
+  <div class="sec">🎮 Jogos por matéria</div>
+  <div class="grid">${tiles}</div>
+  ${(p.revisar||[]).length?`<button class="profile" style="margin-top:14px;border-color:var(--pop)" onclick="iniciarQuiz('rev')"><span class="av">🔁</span><span><b>Revisão com a Coruja</b><br><span class="muted">${p.revisar.length} pergunta${p.revisar.length>1?'s':''} que você errou · acerte 2 vezes para dominar</span></span></button>`:''}
+  <div class="sec">✨ Atividades</div>
+  <div class="grid">
+    <button class="tile" onclick="telaBiblioteca()"><span class="e">📖</span><b>Biblioteca</b><small>Ler e medir a leitura</small></button>
+    <button class="tile" onclick="telaDitado()"><span class="e">✍️</span><b>Ditado</b><small>Ouvir e escrever</small></button>
+    <button class="tile" onclick="telaDesenho('livre')"><span class="e">🎨</span><b>Desenhar</b><small>Desenho livre e temas</small></button>
+    <button class="tile" onclick="telaAvatar()"><span class="e">🧍</span><b>Meu avatar</b><small>Vestir e personalizar</small></button>
+    <button class="tile" onclick="telaLoja('roupa')"><span class="e">🛍️</span><b>Lojinha</b><small>Roupas, calçados e mais</small></button>
+    <button class="tile" onclick="telaCofrinho()"><span class="e">🐷</span><b>Cofrinho</b><small>🪙 ${p.moedas} na carteira · 🐷 ${p.cofrinho}</small></button>
+    <button class="tile" onclick="telaPainel()"><span class="e">📊</span><b>Painel dos pais</b><small>Dados de aprendizado</small></button>
+  </div>
+  <button class="btn alt" style="margin-top:22px" onclick="telaPerfis()">👥 Trocar criança</button>`;
+}
+
+// ----- matéria -----
+function telaMateria(sub){
+  const p = me(), m = MAT[sub], v = pct(p.stats[sub]);
+  app.innerHTML = `
+  ${topo(m.e+' '+m.n, 'telaInicio()')}
+  <div class="card" style="border-color:${m.c}">
+    <div class="muted">${p.ano}º ano · nível de jogo <b>${nivelDe(p,sub)}</b>${nivelDe(p,sub)>p.ano?' 🚀':''}${pendentes(p,sub).length?` · 🔁 ${pendentes(p,sub).length} para revisar`:''}</div>
+    <div style="font-size:20px;font-weight:700">${v===null?'Nenhuma partida ainda':`Acertos até agora: <b>${v}%</b> (${p.stats[sub].ok} de ${p.stats[sub].tot})`}</div>
+  </div>
+  <button class="btn warm" onclick="iniciarQuiz('${sub}')">🎮 Jogar · 5 perguntas</button>
+  <button class="btn" onclick="telaDesenho('${sub}')">🎨 Desenhar sobre ${m.n}</button>
+  ${sub==='por'?`<button class="btn alt" onclick="telaBiblioteca()">📖 Ler uma história</button><button class="btn alt" onclick="telaDitado()">✍️ Fazer ditado</button>`:''}
+  ${sub==='ing'||sub==='esp'?`<p class="muted">Toque em 🔊 para ouvir a pronúncia.</p>`:''}`;
+}
+
+// ----- quiz -----
+let Q = null;
+function iniciarQuiz(sub){
+  const p = me();
+  if(sub === 'rev'){
+    const itens = shuffle(p.revisar||[]).slice(0,5);
+    if(!itens.length) return telaInicio();
+    Q = {sub, lista: itens.map(r => ({...r.x, rev:r.id, sub:r.sub})), i:0, ok:0}; return telaQuiz();
+  }
+  const rev = pendentes(p, sub).slice(0,2).map(r => ({...r.x, rev:r.id, sub}));
+  Q = {sub, lista: shuffle(rev.concat(gerarRodada(sub, nivelDe(p, sub)).slice(0, 5-rev.length))), i:0, ok:0};
+  telaQuiz();
+}
+const infoMat = sub => sub === 'rev' ? {n:'Revisão', e:'🔁'} : MAT[sub];
+function telaQuiz(){
+  const {sub, lista, i} = Q, x = lista[i], m = infoMat(sub);
+  const audioTxt = x.say ? x.say.t : x.q;
+  app.innerHTML = `
+  ${topo(m.e+' '+m.n, 'telaMateria(\''+sub+'\')')}
+  <div class="prog">${lista.map((_,k)=>`<i class="${k<i?'d':''}"></i>`).join('')}</div>
+  <div class="card">
+    <div class="row" style="justify-content:space-between"><span class="muted">Pergunta ${i+1} de ${lista.length}${x.rev?' · <b style="color:var(--pop)">🔁 Revisão</b>':''}${sub==='rev'?' · '+MAT[x.sub].e:''}</span>
+    <button class="speak" onclick="falarQ()">🔊 Ouvir</button></div>
+    ${x.e?`<div class="big" style="${x.e.length>8?'font-size:40px':''}">${x.e}</div>`:''}
+    <div class="q">${esc(x.q)}</div>
+    <div class="opts">${x.o.map((o,k)=>`<button class="opt" data-v="${esc(o)}" onclick="responder(this)">${esc(o)}</button>`).join('')}</div>
+    <div class="fb" id="fb"></div>
+    <div id="tutor"></div>
+    <button class="btn hide" id="prox" onclick="proxima()">Próxima ➜</button>
+  </div>`;
+  if(x.auto && x.say) setTimeout(()=>falar(x.say.t, x.say.l), 300);
+}
+function tutorHTML(x){
+  const exp = x.d || `A resposta certa é "${x.a}". Leia a pergunta de novo com calma e tente lembrar dessa resposta — ela vai aparecer de novo na revisão!`;
+  return `<div class="tip" style="display:flex;gap:10px;align-items:flex-start;background:#eef3ff;margin-top:10px">
+    <span style="font-size:34px;line-height:1">🦉</span><div><b>Coruja Sábia explica:</b><br>${esc(exp)}
+    <br><button class="speak" style="margin-top:6px" onclick="falar(this.dataset.t)" data-t="${esc(exp)}">🔊 Ouvir explicação</button></div></div>`;
+}
+function falarQ(){
+  const x = Q.lista[Q.i];
+  if(x.auto && x.say) return falar(x.say.t, x.say.l);
+  falar(x.q.replace(/[−]/g,' menos ').replace(/×/g,' vezes ').replace(/÷/g,' dividido por ').replace(/=\s*\?/,' é igual a quanto?'));
+}
+function responder(btn){
+  const x = Q.lista[Q.i], certo = btn.dataset.v === x.a;
+  document.querySelectorAll('.opt').forEach(b => { b.disabled = true; if(b.dataset.v === x.a) b.classList.add('ok'); });
+  if(!certo) btn.classList.add('no');
+  const subQ = x.sub || Q.sub;
+  registrar(subQ, certo);
+  if(x.rev) resultadoRevisao(x.rev, certo); else if(!certo) guardarErro(subQ, x);
+  save();
+  if(certo){ Q.ok++; estrela('⭐ +2 🪙'); }
+  if(!certo) $('#tutor').innerHTML = tutorHTML(x);
+  $('#fb').innerHTML = certo ? `<span style="color:var(--ok)">${pick(['Muito bem!','Arrasou!','Isso aí!','Perfeito!'])} ⭐</span>`
+     : `<span style="color:var(--bad)">Quase! A resposta é <b>${esc(x.a)}</b>${x.dica?' ('+x.dica+')':''}</span>`;
+  if(x.say) falar(x.say.t, x.say.l);
+  $('#prox').classList.remove('hide');
+  atualizarPill();
+}
+function proxima(){
+  Q.i++;
+  if(Q.i < Q.lista.length) return telaQuiz();
+  const {sub, ok, lista} = Q, m = infoMat(sub);
+  const nivelMsg = sub === 'rev' ? '' : ajustarNivel(sub, ok, lista.length);
+  const pend = (me().revisar||[]).length;
+  const bonus = ok===lista.length ? 5 : 0; if(bonus) ganhar(bonus, 'Bônus: rodada perfeita');
+  app.innerHTML = `${topo(m.e+' '+m.n, 'telaMateria(\''+sub+'\')')}
+  <div class="card" style="text-align:center">
+    <div class="big">${ok===lista.length?'🏆':ok>=3?'🎉':'💪'}</div>
+    <div class="q">Você acertou ${ok} de ${lista.length}!</div>
+    <p style="font-size:20px">Ganhou <b>🪙 ${ok*2+bonus} moedas</b>${bonus?' (com bônus de rodada perfeita!)':''}</p>
+    <div style="font-size:40px">${'⭐'.repeat(ok)}${'☆'.repeat(lista.length-ok)}</div>
+    ${nivelMsg?`<div class="tip" style="font-size:18px">${nivelMsg}</div>`:''}
+    ${pend?`<div class="tip">🔁 Guardei ${pend} pergunta${pend>1?'s':''} para revisar depois. Errar faz parte de aprender!</div>`:''}
+    <button class="btn warm" onclick="iniciarQuiz('${sub}')">${sub==='rev'?'Revisar mais':'Jogar de novo'}</button>
+    <button class="btn alt" onclick="telaInicio()">Voltar ao início</button>
+  </div>`;
+}
+
+// ----- biblioteca / leitura -----
+function telaBiblioteca(){
+  const p = me();
+  app.innerHTML = `${topo('📖 Biblioteca', 'telaInicio()')}
+  <p class="muted">Toque em <b>Começar a ler</b>, leia em voz alta e toque em <b>Terminei</b>. O app calcula as palavras por minuto e depois faz 3 perguntas.</p>
+  ${HISTORIAS.map((h,k)=>`<button class="profile" onclick="telaHistoria(${k})" style="${h.ano===p.ano?'border-color:var(--sun);background:#fff8e1':''}">
+     <span class="av">${h.e}</span><span><b>${h.t}</b><br><span class="muted">${h.ano}º ano · ${h.txt.split(/\s+/).length} palavras${h.ano===p.ano?' · ⭐ indicada':''}</span></span></button>`).join('')}`;
+}
+let L = null;
+function telaHistoria(k){
+  const h = HISTORIAS[k];
+  L = {k, ini:null, ppm:null, qi:0, ok:0};
+  app.innerHTML = `${topo(h.e+' '+h.t, 'telaBiblioteca()')}
+  <div class="card"><div class="story blur" id="txt">${esc(h.txt)}</div></div>
+  <button class="btn go" id="bIni" onclick="iniciarLeitura()">▶️ Começar a ler</button>
+  <button class="btn warm hide" id="bFim" onclick="fimLeitura()">🏁 Terminei!</button>
+  <button class="btn alt" id="bOuvir" onclick="falar(HISTORIAS[${k}].txt)">🔊 Ouvir a história (sem medir tempo)</button>
+  <div id="res"></div>`;
+}
+function iniciarLeitura(){
+  try{ speechSynthesis.cancel(); }catch(e){}
+  L.ini = Date.now(); $('#txt').classList.remove('blur');
+  $('#bIni').classList.add('hide'); $('#bOuvir').classList.add('hide'); $('#bFim').classList.remove('hide');
+}
+function fimLeitura(){
+  const h = HISTORIAS[L.k], seg = Math.max(5,(Date.now()-L.ini)/1000), pal = h.txt.split(/\s+/).length;
+  L.ppm = Math.round(pal/(seg/60)); L.seg = Math.round(seg);
+  $('#bFim').classList.add('hide');
+  perguntaLeitura();
+}
+function perguntaLeitura(){
+  const h = HISTORIAS[L.k], ref = REF_PPM[me().ano];
+  if(L.qi >= h.qs.length){
+    const p = me();
+    p.leituras.push({d:hoje(), t:h.t, ano:h.ano, ppm:L.ppm, seg:L.seg, comp:L.ok, de:h.qs.length});
+    ganhar(5, 'Leitura concluída'); save();
+    $('#res').innerHTML = `<div class="card" style="text-align:center">
+      <div class="big">📚</div>
+      <div class="q">Leitura concluída!</div>
+      <p><b style="font-size:30px">${L.ppm}</b> palavras por minuto<br><span class="muted">em ${L.seg} s · referência do ${p.ano}º ano ≈ ${ref} ppm</span></p>
+      <p>Compreensão: <b>${L.ok} de ${h.qs.length}</b> ${'⭐'.repeat(L.ok)}</p><p>Ganhou <b>🪙 ${5+L.ok*2} moedas</b></p>
+      ${L.ppm >= ref && L.ok === h.qs.length && L.k < HISTORIAS.length-1 ? `<div class="tip">🦉 Leitura rápida e entendeu tudo! Que tal um desafio maior?</div><button class="btn warm" onclick="telaHistoria(${L.k+1})">🚀 Ler "${HISTORIAS[L.k+1].t}" (${HISTORIAS[L.k+1].ano}º ano)</button>` : ''}
+      ${L.ppm < ref*0.7 ? `<div class="tip">🦉 Dica: ler o mesmo texto de novo ajuda muito — a 2ª leitura costuma sair mais rápida.</div><button class="btn warm" onclick="telaHistoria(${L.k})">🔄 Ler de novo</button>` : ''}
+      ${L.ok < h.qs.length ? `<div class="tip">🦉 Para entender melhor: depois de cada parte, pare e conte para alguém o que aconteceu.</div>` : ''}
+      <button class="btn" onclick="telaBiblioteca()">Outra história</button></div>`;
+    return;
+  }
+  const [q, c, w] = h.qs[L.qi], o = shuffle([c,...w]);
+  $('#res').innerHTML = `<div class="card"><div class="muted">Pergunta ${L.qi+1} de ${h.qs.length} · ${L.ppm} ppm</div>
+   <div class="q">${esc(q)}</div><div class="opts">${o.map(x=>`<button class="opt" data-v="${esc(x)}" onclick="respLeitura(this)">${esc(x)}</button>`).join('')}</div>
+   <div class="fb" id="fb"></div><button class="btn hide" id="prox" onclick="L.qi++;perguntaLeitura()">Próxima ➜</button></div>`;
+  $('#res').scrollIntoView({behavior:'smooth'});
+}
+function respLeitura(btn){
+  const c = HISTORIAS[L.k].qs[L.qi][1], certo = btn.dataset.v === c;
+  document.querySelectorAll('.opt').forEach(b=>{ b.disabled=true; if(b.dataset.v===c) b.classList.add('ok'); });
+  if(!certo) btn.classList.add('no'); else { L.ok++; estrela('⭐ +2 🪙'); }
+  registrar('por', certo);
+  $('#fb').innerHTML = certo ? '<span style="color:var(--ok)">Isso mesmo! ⭐</span>' : '<span style="color:var(--bad)">Releia o texto com calma 😉</span>';
+  $('#prox').classList.remove('hide');
+}
+
+// ----- ditado -----
+let D = null;
+function telaDitado(){
+  const p = me();
+  p.palRev = p.palRev || [];
+  const rev = shuffle(p.palRev).slice(0,2);
+  D = {lista:shuffle(rev.concat(shuffle(DITADO[p.ano].filter(w=>!rev.includes(w))).slice(0,6-rev.length))), i:0, ok:0, acento:0, erros:[]};
+  passoDitado();
+}
+function passoDitado(){
+  const p = me();
+  if(D.i >= D.lista.length){
+    p.ditados.push({d:hoje(), ano:p.ano, ok:D.ok, de:D.lista.length, acento:D.acento, erros:D.erros}); ganhar(3, 'Ditado concluído'); save();
+    app.innerHTML = `${topo('✍️ Ditado', 'telaInicio()')}<div class="card" style="text-align:center">
+      <div class="big">${D.ok>=5?'🏆':'✏️'}</div><div class="q">Você escreveu certo ${D.ok} de ${D.lista.length}!</div>
+      <p>Ganhou <b>🪙 ${3+D.ok*2} moedas</b></p>
+      ${D.erros.length?`<p class="muted">Para treinar: <b>${D.erros.map(esc).join(', ')}</b></p>`:''}
+      <button class="btn warm" onclick="telaDitado()">Novo ditado</button><button class="btn alt" onclick="telaInicio()">Início</button></div>`;
+    return;
+  }
+  app.innerHTML = `${topo('✍️ Ditado · '+p.ano+'º ano', 'telaInicio()')}
+  <div class="prog">${D.lista.map((_,k)=>`<i class="${k<D.i?'d':''}"></i>`).join('')}</div>
+  <div class="card" style="text-align:center">
+    <p class="muted">Ouça a palavra e escreva:</p>
+    <button class="btn" style="font-size:26px" onclick="falar(D.lista[D.i])">🔊 Ouvir palavra</button>
+    <input type="text" id="resp" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="escreva aqui">
+    <div class="fb" id="fb"></div>
+    <button class="btn go" id="conf" onclick="conferir()">Conferir ✔️</button>
+    <button class="btn hide" id="prox" onclick="D.i++;passoDitado()">Próxima ➜</button>
+  </div>`;
+  setTimeout(()=>falar(D.lista[D.i]), 350);
+  $('#resp').addEventListener('keydown', e => { if(e.key==='Enter') conferir(); });
+}
+function conferir(){
+  const w = D.lista[D.i], r = $('#resp').value.trim().toLowerCase(); if(!r) return;
+  let msg, certo = r === w;
+  if(certo){ D.ok++; estrela('⭐ +2 🪙'); msg = '<span style="color:var(--ok)">Escreveu certinho! ⭐</span>'; }
+  else if(noAcc(r) === noAcc(w)){ D.acento++; D.erros.push(w); msg = `<span style="color:#d58a00">Quase! Atenção ao acento ou ç: <b>${esc(w)}</b></span>`; }
+  else { D.erros.push(w); msg = `<span style="color:var(--bad)">O certo é <b>${esc(w)}</b></span>`; }
+  registrar('por', certo);
+  const pr = me().palRev = me().palRev || [];
+  if(certo){ const k = pr.indexOf(w); if(k>=0) pr.splice(k,1); } else if(!pr.includes(w)) pr.push(w);
+  save();
+  $('#fb').innerHTML = msg; $('#resp').disabled = true;
+  $('#conf').classList.add('hide'); $('#prox').classList.remove('hide');
+}
+
+// ----- desenho -----
+let cor = '#2d2a4a', esp = 8, borr = false;
+function telaDesenho(sub){
+  const tema = pick(TEMAS[sub] || TEMAS.livre), p = me();
+  app.innerHTML = `${topo('🎨 Desenhar', sub==='livre'?'telaInicio()':'telaMateria(\''+sub+'\')')}
+  <div class="card" style="padding:12px"><b>Desafio:</b> <span id="tema">${tema}</span> <button class="speak" onclick="falar($('#tema').textContent)">🔊</button>
+   <button class="speak" onclick="trocarTema()">🔄 outro</button></div>
+  <canvas id="cv" height="420"></canvas>
+  <div class="colors">${['#2d2a4a','#ff5d5d','#ff9f1c','#ffd23f','#2bb673','#4f8cff','#8a5cf6','#e84a8a','#8b5a2b','#ffffff'].map(c=>`<button style="background:${c}" class="${c===cor?'on':''}" onclick="cor='${c}';borr=false;marcar(this)"></button>`).join('')}</div>
+  <div class="row">${[4,8,16].map(s=>`<button class="chip ${s===esp?'on':''}" onclick="esp=${s};marcar(this)">${s===4?'fino':s===8?'médio':'grosso'}</button>`).join('')}
+   <button class="chip" onclick="borr=true">🧽 borracha</button><button class="chip" onclick="limpar()">🗑️ limpar</button></div>
+  <button class="btn go" onclick="salvarDesenho('${sub}')">💾 Guardar na galeria</button>
+  ${p.desenhos.length?`<div class="sec">Minha galeria</div><div class="gal">${p.desenhos.slice().reverse().map(d=>`<img src="${d.img}" alt="${esc(d.tema)}">`).join('')}</div>`:''}`;
+  window._sub = sub; iniciarCanvas();
+}
+function trocarTema(){ $('#tema').textContent = pick(TEMAS[window._sub] || TEMAS.livre); }
+let ctx, cv;
+function iniciarCanvas(){
+  cv = $('#cv'); const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  cv.width = r.width*dpr; cv.height = 420*dpr; cv.style.height = '420px';
+  ctx = cv.getContext('2d'); ctx.scale(dpr,dpr); ctx.lineCap='round'; ctx.lineJoin='round';
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,r.width,420);
+  let desenhando = false, ult = null;
+  const pos = e => { const b = cv.getBoundingClientRect(); return [e.clientX-b.left, e.clientY-b.top]; };
+  cv.onpointerdown = e => { desenhando = true; ult = pos(e); cv.setPointerCapture(e.pointerId); traco(ult, ult); };
+  cv.onpointermove = e => { if(!desenhando) return; const p = pos(e); traco(ult, p); ult = p; };
+  cv.onpointerup = cv.onpointercancel = () => desenhando = false;
+}
+function traco(a, b){
+  ctx.strokeStyle = borr ? '#fff' : cor; ctx.lineWidth = borr ? 26 : esp;
+  ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0]+.01,b[1]); ctx.stroke();
+}
+function limpar(){ const r = cv.getBoundingClientRect(); ctx.fillStyle='#fff'; ctx.fillRect(0,0,r.width,420); }
+function salvarDesenho(sub){
+  const p = me(), t = document.createElement('canvas'); t.width = 360; t.height = Math.round(360*cv.height/cv.width);
+  t.getContext('2d').drawImage(cv, 0, 0, t.width, t.height);
+  p.desenhos.push({d:hoje(), sub, tema:$('#tema').textContent, img:t.toDataURL('image/jpeg', .7)});
+  if(p.desenhos.length > 12) p.desenhos.shift();
+  p.estrelas++; ganhar(3, 'Desenho guardado'); save(); estrela('🎨 +3 🪙'); setTimeout(()=>telaDesenho(sub), 600);
+}
+
+// ----- painel dos pais / professores -----
+function telaPainel(){
+  const p = me(), ref = REF_PPM[p.ano];
+  const totais = Object.values(p.stats).reduce((a,s)=>({ok:a.ok+s.ok, tot:a.tot+s.tot}), {ok:0,tot:0});
+  const ult = p.leituras[p.leituras.length-1];
+  const linhas = Object.entries(MAT).map(([k,m]) => { const v = pct(p.stats[k]);
+    return `<div class="lrow"><span>${m.e} ${m.n}<br><small class="muted">nível ${nivelDe(p,k)}${nivelDe(p,k)>p.ano?' ↑':nivelDe(p,k)<p.ano?' ↓':''}</small></span><div class="bar"><i style="width:${v||0}%;background:${m.c}"></i></div><em>${v===null?'—':v+'% ('+p.stats[k].tot+')'}</em></div>`; }).join('');
+  // recomendações automáticas
+  const dicas = [];
+  Object.entries(MAT).forEach(([k,m]) => { const s = p.stats[k], v = pct(s);
+    if(s && s.tot >= 5 && v < 60) dicas.push(`🔁 Reforçar <b>${m.n}</b>: ${v}% de acertos em ${s.tot} respostas.`);
+    if(s && s.tot >= 10 && v >= 90) dicas.push(`🚀 Ótimo em <b>${m.n}</b> (${v}%). Pode testar perguntas do ${Math.min(5,p.ano+1)}º ano.`);
+    if(!s) dicas.push(`🧭 Ainda não praticou <b>${m.n}</b>.`); });
+  if(ult){
+    if(ult.ppm < ref*0.7) dicas.push(`📖 Fluência abaixo da referência (${ult.ppm} ppm vs ≈${ref}). Sugestão: ler em voz alta 10 min por dia, repetindo o mesmo texto 2–3 vezes.`);
+    else if(ult.ppm >= ref) dicas.push(`📖 Fluência dentro ou acima da referência (${ult.ppm} ppm).`);
+    if(ult.comp < ult.de) dicas.push(`🧠 Compreensão: ${ult.comp}/${ult.de} na última leitura. Converse sobre o texto: "o que aconteceu?", "por quê?".`);
+  } else dicas.push('📖 Faça a primeira leitura na Biblioteca para medir a fluência.');
+  const acentos = p.ditados.reduce((a,d)=>a+d.acento,0);
+  const acima = Object.keys(MAT).filter(k => nivelDe(p,k) > p.ano), abaixo = Object.keys(MAT).filter(k => nivelDe(p,k) < p.ano);
+  if(acima.length) dicas.push(`🚀 O tutor subiu o nível em: <b>${acima.map(k=>MAT[k].n).join(', ')}</b> — está acima do ${p.ano}º ano.`);
+  if(abaixo.length) dicas.push(`🦉 O tutor está reforçando a base em: <b>${abaixo.map(k=>MAT[k].n).join(', ')}</b> (nível abaixo do ano).`);
+  if((p.revisar||[]).length) dicas.push(`🔁 ${p.revisar.length} pergunta(s) erradas em revisão programada. Ex.: ${esc(p.revisar.slice(-2).map(r=>r.x.q).join(' | '))}`);
+  if(acentos >= 3) dicas.push(`✍️ ${acentos} erros só de acento/ç nos ditados — vale treinar acentuação.`);
+  const errosDit = [...new Set(p.ditados.flatMap(d=>d.erros))].slice(-8);
+
+  // atividade dos últimos 7 dias
+  const dias = [...Array(7)].map((_,k)=>{ const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()-6+k); return d; });
+  const porDia = dias.map(d => (p.hist||[]).filter(h => h.d >= d.getTime() && h.d < d.getTime()+864e5).length);
+  const max = Math.max(1, ...porDia);
+
+  app.innerHTML = `${topo('📊 Painel dos pais', 'telaInicio()')}
+  <div class="hello" style="box-shadow:none"><div style="flex:none">${avatarSVG(p,null,64)}</div><div><b>${esc(p.nome)}</b><span>${p.ano}º ano</span>
+    <div class="row" style="margin-top:6px">${[1,2,3,4,5].map(a=>`<button class="chip ${a===p.ano?'on':''}" style="padding:2px 10px" onclick="mudarAno(${a})">${a}º</button>`).join('')}</div></div></div>
+  <div class="stat">
+    <div><b>⭐ ${p.estrelas}</b><small>estrelas</small></div>
+    <div><b>${totais.tot?Math.round(100*totais.ok/totais.tot)+'%':'—'}</b><small>acertos gerais</small></div>
+    <div><b>${ult?ult.ppm:'—'}</b><small>ppm (ref. ≈${ref})</small></div>
+  </div>
+  <div class="card"><div class="sec" style="margin-top:0">Acertos por matéria</div>${linhas}</div>
+  <div class="card"><div class="sec" style="margin-top:0">Atividade · últimos 7 dias</div>
+    <div style="display:flex;align-items:flex-end;gap:8px;height:110px">${porDia.map((n,k)=>`<div style="flex:1;text-align:center">
+      <div style="height:${Math.round(80*n/max)}px;min-height:3px;background:var(--sky);border-radius:8px 8px 3px 3px"></div>
+      <small class="muted">${dias[k].toLocaleDateString('pt-BR',{weekday:'short'}).slice(0,3)}</small><br><small>${n}</small></div>`).join('')}</div></div>
+  <div class="card"><div class="sec" style="margin-top:0">💡 Recomendações</div>${dicas.map(d=>`<div class="tip">${d}</div>`).join('')}</div>
+  <div class="card"><div class="sec" style="margin-top:0">📖 Histórico de leitura</div>
+    ${p.leituras.length?`<table><tr><th>Data</th><th>Texto</th><th>ppm</th><th>Compr.</th></tr>${p.leituras.slice(-8).reverse().map(l=>`<tr><td>${l.d}</td><td>${esc(l.t)}</td><td><b>${l.ppm}</b></td><td>${l.comp}/${l.de}</td></tr>`).join('')}</table>`:'<p class="muted">Nenhuma leitura ainda.</p>'}
+    <p class="muted">Referência aproximada de fluência ao fim de cada ano (ppm): ${Object.entries(REF_PPM).map(([a,v])=>a+'º '+v).join(' · ')}. Ajuste com a escola.</p></div>
+  <div class="card"><div class="sec" style="margin-top:0">✍️ Ditados</div>
+    ${p.ditados.length?`<table><tr><th>Data</th><th>Acertos</th><th>Só acento</th></tr>${p.ditados.slice(-6).reverse().map(d=>`<tr><td>${d.d}</td><td>${d.ok}/${d.de}</td><td>${d.acento}</td></tr>`).join('')}</table>
+    ${errosDit.length?`<p>Palavras para treinar: <b>${errosDit.map(esc).join(', ')}</b></p>`:''}`:'<p class="muted">Nenhum ditado ainda.</p>'}</div>
+  ${p.desenhos.length?`<div class="card"><div class="sec" style="margin-top:0">🎨 Desenhos</div><div class="gal">${p.desenhos.slice().reverse().map(d=>`<img src="${d.img}" title="${esc(d.tema)}">`).join('')}</div></div>`:''}
+  ${painelFinanceiro(p)}
+  <button class="btn alt" onclick="confirmarApagar()">🗑️ Apagar dados desta criança</button>
+  <p class="muted">Os dados ficam só neste aparelho/navegador.</p>`;
+}
+function mudarAno(a){ const p = me(); p.ano = a; p.nivel = {}; p.rodadas = {}; save(); telaPainel(); }
+function confirmarApagar(){
+  const m = document.createElement('div'); m.className = 'modal';
+  m.innerHTML = `<div class="card"><div class="q">Apagar todos os dados de ${esc(me().nome)}?</div>
+    <button class="btn warm" id="sim">Sim, apagar</button><button class="btn alt" id="nao">Cancelar</button></div>`;
+  document.body.appendChild(m);
+  m.querySelector('#nao').onclick = () => m.remove();
+  m.querySelector('#sim').onclick = () => { DB.profiles = DB.profiles.filter(p=>p.id!==DB.current); DB.current=null; save(); m.remove(); telaPerfis(); };
+}
+
+// =========================================================
+// ECONOMIA: moedas, cofrinho que rende, metas, loja e avatar
+// =========================================================
+const PELES = ['#ffe0c4','#f5c49c','#d9a27a','#a86f4b','#6e4630'];
+const CABELOS = ['#2d2a4a','#6b3e26','#c68642','#f2c94c','#e84a8a'];
+const CATS = [['roupa','👕','Roupas'],['baixo','👖','Calças e saias'],['calcado','👟','Calçados'],['cabelo','💇','Cabelos'],['chapeu','🧢','Chapéus'],['acessorio','🕶️','Acessórios'],['fundo','🖼️','Fundos']];
+const OPCIONAIS = ['chapeu','acessorio'];
+const ITENS = [
+ {id:'r_basica',cat:'roupa',n:'Camiseta amarela',p:0,cor:'#ffc93c'},
+ {id:'r_verde',cat:'roupa',n:'Camiseta verde',p:10,cor:'#2bb673'},
+ {id:'r_listrada',cat:'roupa',n:'Camiseta listrada',p:15,cor:'#ff7a59',padrao:'listra'},
+ {id:'r_estrela',cat:'roupa',n:'Camisa de estrela',p:25,cor:'#8a5cf6',padrao:'estrela'},
+ {id:'r_moletom',cat:'roupa',n:'Moletom',p:30,cor:'#14a3b8',padrao:'moletom'},
+ {id:'r_heroi',cat:'roupa',n:'Uniforme de herói',p:45,cor:'#4f8cff',padrao:'heroi'},
+ {id:'r_vestido',cat:'roupa',n:'Vestido de bolinhas',p:30,cor:'#e84a8a',padrao:'vestido',g:'menina'},
+ {id:'r_vestido2',cat:'roupa',n:'Vestido lilás',p:20,cor:'#8a5cf6',padrao:'vestido',g:'menina'},
+ {id:'b_short',cat:'baixo',n:'Bermuda azul',p:0,cor:'#4f8cff',forma:'short'},
+ {id:'b_jeans',cat:'baixo',n:'Calça jeans',p:15,cor:'#3a5a98',forma:'calca'},
+ {id:'b_cargo',cat:'baixo',n:'Bermuda cargo',p:15,cor:'#6f7d3a',forma:'short',g:'menino'},
+ {id:'b_saia',cat:'baixo',n:'Saia rodada',p:15,cor:'#e84a8a',forma:'saia',g:'menina'},
+ {id:'b_moletom',cat:'baixo',n:'Calça de moletom',p:20,cor:'#6b6888',forma:'calca'},
+ {id:'s_basico',cat:'calcado',n:'Tênis branco',p:0,cor:'#ffffff'},
+ {id:'s_colorido',cat:'calcado',n:'Tênis colorido',p:15,cor:'#ff7a59',forma:'listra'},
+ {id:'s_bota',cat:'calcado',n:'Bota',p:25,cor:'#8b5a2b',forma:'bota'},
+ {id:'s_brilho',cat:'calcado',n:'Tênis que brilha',p:40,cor:'#ffd23f',forma:'brilho'},
+ {id:'h_curto',cat:'cabelo',n:'Curto',p:0},
+ {id:'h_longo',cat:'cabelo',n:'Longo',p:20,g:'menina'},
+ {id:'h_coque',cat:'cabelo',n:'Coque',p:20,g:'menina'},
+ {id:'h_tranca',cat:'cabelo',n:'Tranças',p:25,g:'menina'},
+ {id:'h_topete',cat:'cabelo',n:'Topete',p:20,g:'menino'},
+ {id:'h_cacheado',cat:'cabelo',n:'Cacheado',p:25},
+ {id:'h_moicano',cat:'cabelo',n:'Moicano roxo',p:35,g:'menino'},
+ {id:'c_bone',cat:'chapeu',n:'Boné',p:15,cor:'#ff5d5d'},
+ {id:'c_laco',cat:'chapeu',n:'Laço',p:15,cor:'#e84a8a',g:'menina'},
+ {id:'c_tiara',cat:'chapeu',n:'Tiara de flor',p:20,cor:'#ff7a59',g:'menina'},
+ {id:'c_gorro',cat:'chapeu',n:'Gorro',p:20,cor:'#4f8cff'},
+ {id:'c_coroa',cat:'chapeu',n:'Coroa',p:80,cor:'#ffc93c'},
+ {id:'a_oculos',cat:'acessorio',n:'Óculos',p:20},
+ {id:'a_fone',cat:'acessorio',n:'Fone de ouvido',p:30},
+ {id:'a_capa',cat:'acessorio',n:'Capa de herói',p:50,cor:'#ff5d5d'},
+ {id:'f_sol',cat:'fundo',n:'Dia de sol',p:0},
+ {id:'f_praia',cat:'fundo',n:'Praia',p:25},
+ {id:'f_floresta',cat:'fundo',n:'Floresta',p:35},
+ {id:'f_espaco',cat:'fundo',n:'Espaço sideral',p:60},
+];
+const item = id => ITENS.find(i => i.id === id);
+const KIT = { menino:{cabelo:'h_curto', baixo:'b_short', roupa:'r_basica'}, menina:{cabelo:'h_longo', baixo:'b_saia', roupa:'r_basica'} };
+function aplicarGenero(p, g){
+  p.genero = g; const k = KIT[g];
+  Object.entries(k).forEach(([cat,id]) => { if(!p.itens.includes(id)) p.itens.push(id); p.eq[cat] = id; });
+}
+const DICAS = [
+ 'Antes de comprar, pergunte: eu <b>preciso</b> ou só <b>quero</b>? Os dois valem — mas pense antes!',
+ 'Guardar um pouquinho de tudo o que você ganha ajuda a conquistar coisas maiores.',
+ 'No cofrinho, o dinheiro cresce 10% por semana. Isso se chama <b>rendimento</b> (ou juros).',
+ 'Ter uma <b>meta</b> ajuda a não gastar com qualquer coisa no caminho.',
+ 'Comprar tudo de uma vez deixa a carteira vazia. Dá para escolher o que é mais importante.',
+ 'Esperar um pouco antes de comprar ajuda a saber se você quer mesmo.',
+];
+
+// ---------- dados da carteira ----------
+function garantir(p){
+  if(!p || p.moedas !== undefined) return;
+  Object.assign(p, {
+    moedas:10, cofrinho:0, ganhos:10, gastos:0, poupado:0, compras:0, meta:null, ultRend:Date.now(),
+    extrato:[{d:hoje(), t:'Presente de boas-vindas 🎁', v:10}],
+    itens: ITENS.filter(i => i.p === 0).map(i => i.id),
+    eq:{roupa:'r_basica', baixo:'b_short', calcado:'s_basico', cabelo:'h_curto', chapeu:null, acessorio:null, fundo:'f_sol'},
+    pele:PELES[1], corCabelo:CABELOS[0]
+  });
+  aplicarGenero(p, p.genero || 'menino');
+}
+function mov(t, v, tipo){
+  const p = me(); p.extrato = p.extrato || [];
+  const u = p.extrato[p.extrato.length-1];
+  if(u && u.t === t && u.d === hoje() && !tipo) u.v += v;
+  else p.extrato.push({d:hoje(), t, v, tipo});
+  if(p.extrato.length > 80) p.extrato.shift();
+}
+function ganhar(v, t){
+  const p = me(); if(!p) return; garantir(p);
+  p.moedas += v; p.ganhos += v; mov(t, v); save(); atualizarPill();
+}
+function atualizarPill(){ const p = me(), el = document.getElementById('pill'); if(p && el) el.textContent = `⭐ ${p.estrelas} · 🪙 ${p.moedas}`; }
+const SEMANA = 7*864e5;
+const jurosDe = v => v > 0 ? Math.max(1, Math.round(v*0.10)) : 0;
+function aplicarRendimento(p, simular){
+  garantir(p);
+  let n = simular ? 1 : Math.min(52, Math.floor((Date.now() - p.ultRend)/SEMANA));
+  for(let k=0; k<n; k++){
+    const j = jurosDe(p.cofrinho);
+    if(j){ p.cofrinho += j; p.ganhos += j; const cur = DB.current; DB.current = p.id; mov('Rendimento do cofrinho (10%) 📈', j, 'rend'); DB.current = cur; }
+  }
+  if(!simular && n > 0) p.ultRend += n*SEMANA;
+  save();
+}
+
+// ---------- modal ----------
+function abrirModal(html){
+  fecharModal();
+  const m = document.createElement('div'); m.className = 'modal'; m.id = 'modal';
+  m.innerHTML = `<div class="card">${html}</div>`;
+  m.onclick = e => { if(e.target === m) fecharModal(); };
+  document.body.appendChild(m);
+}
+function fecharModal(){ const m = document.getElementById('modal'); if(m) m.remove(); }
+
+// ---------- AVATAR (SVG em camadas) ----------
+let _uid = 0;
+function avatarSVG(p, over, w=160){
+  garantir(p);
+  const eq = Object.assign({}, p.eq, over || {}), S = p.pele, H = p.corCabelo, id = 'av' + (++_uid);
+  const g = k => eq[k] ? item(eq[k]) : null;
+  const cab = g('cabelo'), rou = g('roupa'), bai = g('baixo'), cal = g('calcado'), cha = g('chapeu'), ace = g('acessorio');
+  let s = fundoSVG(eq.fundo || 'f_sol');
+  if(ace && ace.id === 'a_capa') s += `<path d="M66 108 L134 108 L160 242 Q100 226 40 242 Z" fill="${ace.cor}"/>`;
+  if(cab && cab.id === 'h_longo') s += `<path d="M60 62 Q58 24 100 26 Q142 24 140 62 L145 134 Q122 142 100 126 Q78 142 55 134 Z" fill="${H}"/>`;
+  if(cab && cab.id === 'h_cacheado') [76,94,110].forEach(y => { s += `<circle cx="60" cy="${y}" r="12" fill="${H}"/><circle cx="140" cy="${y}" r="12" fill="${H}"/>`; });
+  // pernas
+  s += `<rect x="80" y="176" width="17" height="58" rx="6" fill="${S}"/><rect x="103" y="176" width="17" height="58" rx="6" fill="${S}"/>`;
+  s += (rou && rou.padrao === 'vestido' ? '' : baixoSVG(bai)) + calcadoSVG(cal);
+  // braços e pescoço
+  s += `<rect x="48" y="116" width="17" height="64" rx="8" fill="${S}"/><rect x="135" y="116" width="17" height="64" rx="8" fill="${S}"/><rect x="91" y="94" width="18" height="20" fill="${S}"/>`;
+  s += roupaSVG(rou, id);
+  // cabeça
+  s += `<circle cx="64" cy="70" r="7" fill="${S}"/><circle cx="136" cy="70" r="7" fill="${S}"/><circle cx="100" cy="68" r="36" fill="${S}"/>
+   <circle cx="87" cy="70" r="4.5" fill="#2d2a4a"/><circle cx="113" cy="70" r="4.5" fill="#2d2a4a"/><circle cx="88.5" cy="68.5" r="1.5" fill="#fff"/><circle cx="114.5" cy="68.5" r="1.5" fill="#fff"/>
+   <circle cx="79" cy="82" r="5" fill="#ff8fa6" opacity=".55"/><circle cx="121" cy="82" r="5" fill="#ff8fa6" opacity=".55"/>
+   <path d="M89 84 Q100 94 111 84" stroke="#2d2a4a" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  if(p.genero === 'menina') s += `<path d="M80 66 L76 62 M83 64 L81 59 M120 66 L124 62 M117 64 L119 59" stroke="#2d2a4a" stroke-width="2" stroke-linecap="round"/>`;
+  s += cabeloSVG(cab, H) + chapeuSVG(cha);
+  if(ace && ace.id === 'a_oculos') s += `<circle cx="87" cy="70" r="10" fill="rgba(255,255,255,.25)" stroke="#2d2a4a" stroke-width="3"/><circle cx="113" cy="70" r="10" fill="rgba(255,255,255,.25)" stroke="#2d2a4a" stroke-width="3"/><path d="M97 70 H103" stroke="#2d2a4a" stroke-width="3"/>`;
+  if(ace && ace.id === 'a_fone') s += `<path d="M60 72 Q60 20 100 20 Q140 20 140 72" stroke="#2d2a4a" stroke-width="6" fill="none"/><rect x="53" y="60" width="15" height="24" rx="6" fill="#ff5d5d"/><rect x="132" y="60" width="15" height="24" rx="6" fill="#ff5d5d"/>`;
+  return `<svg viewBox="0 0 200 260" width="${w}" height="${Math.round(w*1.3)}" style="display:block;border-radius:${Math.max(10,w/9)}px;max-width:100%" role="img" aria-label="Avatar">${s}</svg>`;
+}
+function fundoSVG(f){
+  if(f === 'f_praia') return `<rect width="200" height="260" fill="#9fdcff"/><circle cx="168" cy="34" r="16" fill="#ffd23f"/><rect y="150" width="200" height="50" fill="#3fb6d8"/><path d="M0 160 Q25 152 50 160 T100 160 T150 160 T200 160" stroke="#fff" stroke-width="3" fill="none" opacity=".6"/><rect y="198" width="200" height="62" fill="#f5d491"/>`;
+  if(f === 'f_floresta') return `<rect width="200" height="260" fill="#d8f3c9"/><path d="M10 200 L30 120 L50 200 Z M150 200 L172 110 L194 200 Z M160 150 L175 90 L190 150 Z" fill="#2f9e5a"/><rect y="226" width="200" height="34" fill="#6cbf4a"/>`;
+  if(f === 'f_espaco'){ let st=''; [[20,30],[45,90],[170,120],[30,180],[180,200],[150,70],[60,230],[120,20],[15,120]].forEach(([x,y])=>st+=`<circle cx="${x}" cy="${y}" r="1.8" fill="#fff"/>`);
+    return `<rect width="200" height="260" fill="#1d1b3a"/>${st}<circle cx="166" cy="42" r="16" fill="#ff9f1c"/><ellipse cx="166" cy="42" rx="26" ry="6" fill="none" stroke="#ffd23f" stroke-width="3"/>`; }
+  return `<rect width="200" height="260" fill="#bfe6ff"/><circle cx="168" cy="32" r="16" fill="#ffd23f"/><ellipse cx="40" cy="36" rx="22" ry="9" fill="#fff"/><rect y="234" width="200" height="26" fill="#8fd16a"/>`;
+}
+function baixoSVG(b){
+  if(!b) return '';
+  if(b.forma === 'calca') return `<path d="M78 174 H122 L122 232 H103 L100 194 L97 232 H78 Z" fill="${b.cor}"/>`;
+  if(b.forma === 'saia') return `<path d="M80 172 H120 L138 212 H62 Z" fill="${b.cor}"/><path d="M70 204 H130" stroke="#fff" stroke-width="3" opacity=".6"/>`;
+  return `<path d="M78 174 H122 L124 206 H102 L100 192 L98 206 H76 Z" fill="${b.cor}"/>`;
+}
+function calcadoSVG(c){
+  if(!c) return '';
+  if(c.forma === 'bota') return `<rect x="77" y="206" width="23" height="36" rx="5" fill="${c.cor}"/><rect x="100" y="206" width="23" height="36" rx="5" fill="${c.cor}"/><rect x="74" y="236" width="27" height="6" rx="3" fill="#5a3a1a"/><rect x="99" y="236" width="27" height="6" rx="3" fill="#5a3a1a"/>`;
+  let s = `<rect x="72" y="226" width="28" height="15" rx="7" fill="${c.cor}" stroke="#d9d2c0" stroke-width="2"/><rect x="100" y="226" width="28" height="15" rx="7" fill="${c.cor}" stroke="#d9d2c0" stroke-width="2"/>`;
+  if(c.forma === 'listra') s += `<rect x="76" y="232" width="20" height="3" fill="#fff"/><rect x="104" y="232" width="20" height="3" fill="#fff"/>`;
+  if(c.forma === 'brilho') s += `<text x="70" y="226" font-size="14">✨</text><text x="118" y="226" font-size="14">✨</text>`;
+  return s;
+}
+function roupaSVG(r, id){
+  if(!r) return '';
+  const T = 'M66 108 Q100 98 134 108 L152 140 L137 147 L134 180 H66 L63 147 L48 140 Z';
+  if(r.padrao === 'vestido') return `<path d="M66 108 Q100 98 134 108 L150 138 L136 144 L134 160 L148 214 H52 L66 160 L64 144 L50 138 Z" fill="${r.cor}"/>` +
+     [[86,130],[112,140],[96,170],[120,186],[76,194],[104,200]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4" fill="#fff" opacity=".85"/>`).join('') + `<rect x="66" y="156" width="68" height="6" fill="rgba(255,255,255,.5)"/>`;
+  if(r.padrao === 'listra') return `<defs><pattern id="${id}l" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="12" height="12" fill="${r.cor}"/><rect width="12" height="6" fill="#fff"/></pattern></defs><path d="${T}" fill="url(#${id}l)"/>`;
+  let s = `<path d="${T}" fill="${r.cor}"/>`;
+  if(r.padrao === 'estrela') s += `<text x="100" y="156" font-size="34" text-anchor="middle" fill="#ffd23f">★</text>`;
+  if(r.padrao === 'moletom') s += `<path d="M80 152 H120 L116 174 H84 Z" fill="rgba(0,0,0,.14)"/><path d="M94 110 V128 M106 110 V128" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>`;
+  if(r.padrao === 'heroi') s += `<circle cx="100" cy="134" r="13" fill="#ffd23f"/><text x="100" y="140" font-size="16" text-anchor="middle" fill="${r.cor}">★</text><rect x="66" y="166" width="68" height="8" fill="#ffd23f"/>`;
+  return s;
+}
+function cabeloSVG(c, H){
+  const curto = `<path d="M63 66 Q60 28 100 30 Q140 28 137 66 Q130 46 112 44 Q100 52 84 44 Q70 48 63 66 Z" fill="${H}"/>`;
+  if(!c || c.id === 'h_curto' || c.id === 'h_longo') return curto;
+  if(c.id === 'h_topete') return curto + `<path d="M78 40 Q92 6 128 24 Q108 22 102 42 Z" fill="${H}"/>`;
+  if(c.id === 'h_tranca'){ let s = curto; [[64,1],[136,-1]].forEach(([x,d]) => { for(let k=0;k<5;k++) s += `<circle cx="${x - d*k*1.5}" cy="${86+k*13}" r="${8-k*0.6}" fill="${H}"/>`; s += `<circle cx="${x - d*7.5}" cy="${150}" r="4" fill="#ff5d5d"/>`; }); return s; }
+  if(c.id === 'h_coque') return `<circle cx="100" cy="26" r="14" fill="${H}"/>` + curto;
+  if(c.id === 'h_cacheado'){ let s = curto; for(let a=190; a<=350; a+=20){ const r = a*Math.PI/180; s += `<circle cx="${(100+36*Math.cos(r)).toFixed(1)}" cy="${(62+34*Math.sin(r)).toFixed(1)}" r="11" fill="${H}"/>`; } return s; }
+  if(c.id === 'h_moicano') return `<path d="M63 66 Q60 30 100 32 Q140 30 137 66 Q120 44 100 44 Q80 44 63 66 Z" fill="${H}" opacity=".35"/><path d="M90 44 L86 10 L98 30 L102 2 L108 30 L118 10 L112 44 Z" fill="#8a5cf6"/>`;
+  return curto;
+}
+function chapeuSVG(c){
+  if(!c) return '';
+  if(c.id === 'c_bone') return `<path d="M63 54 Q65 20 100 20 Q135 20 137 54 Z" fill="${c.cor}"/><path d="M100 48 H152 Q154 58 142 58 H100 Z" fill="${c.cor}"/><circle cx="100" cy="21" r="3" fill="#fff"/>`;
+  if(c.id === 'c_laco') return `<path d="M124 38 L106 24 L106 52 Z M124 38 L142 24 L142 52 Z" fill="${c.cor}"/><circle cx="124" cy="38" r="6" fill="#fff"/>`;
+  if(c.id === 'c_gorro') return `<path d="M62 58 Q62 16 100 16 Q138 16 138 58 Z" fill="${c.cor}"/><rect x="60" y="48" width="80" height="13" rx="6" fill="#fff"/><circle cx="100" cy="14" r="9" fill="#fff"/>`;
+  if(c.id === 'c_tiara') return `<path d="M64 52 Q100 24 136 52" stroke="${c.cor}" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="118" cy="34" r="7" fill="#ffd23f"/><circle cx="118" cy="34" r="3" fill="#ff5d5d"/>`;
+  if(c.id === 'c_coroa') return `<path d="M70 42 L74 12 L88 28 L100 6 L112 28 L126 12 L130 42 Z" fill="${c.cor}" stroke="#e0a800" stroke-width="2"/><circle cx="100" cy="32" r="4" fill="#ff5d5d"/><circle cx="84" cy="35" r="3" fill="#4f8cff"/><circle cx="116" cy="35" r="3" fill="#2bb673"/>`;
+  return '';
+}
+
+// ---------- TELA: MEU AVATAR ----------
+function telaAvatar(){
+  const p = me(); garantir(p);
+  const armario = CATS.map(([cat, e, nome]) => {
+    const meus = ITENS.filter(i => i.cat === cat && p.itens.includes(i.id));
+    const chips = meus.map(i => `<button class="chip ${p.eq[cat]===i.id?'on':''}" onclick="vestir('${cat}','${i.id}')">${i.n}</button>`).join('');
+    const nada = OPCIONAIS.includes(cat) ? `<button class="chip ${!p.eq[cat]?'on':''}" onclick="vestir('${cat}',null)">nenhum</button>` : '';
+    return `<div class="sec" style="font-size:16px">${e} ${nome}</div><div class="row">${nada}${chips || '<span class="muted">Nada ainda — veja na lojinha!</span>'}</div>`;
+  }).join('');
+  app.innerHTML = `${topo('🧍 Meu avatar', 'telaInicio()')}
+  <div style="display:flex;justify-content:center;margin-bottom:10px">${avatarSVG(p, null, 210)}</div>
+  <div class="card">
+    <div class="sec" style="margin-top:0;font-size:16px">🧒 Eu sou</div>
+    <div class="row">${[['menino','👦 Menino'],['menina','👧 Menina']].map(([g,t])=>`<button class="chip ${p.genero===g?'on':''}" onclick="aplicarGenero(me(),'${g}');save();telaAvatar()">${t}</button>`).join('')}</div>
+    <div class="sec" style="font-size:16px">🎨 Cor da pele</div>
+    <div class="colors" style="margin:4px 0">${PELES.map(c=>`<button style="background:${c}" class="${c===p.pele?'on':''}" onclick="me().pele='${c}';save();telaAvatar()"></button>`).join('')}</div>
+    <div class="sec" style="font-size:16px">💇 Cor do cabelo</div>
+    <div class="colors" style="margin:4px 0">${CABELOS.map(c=>`<button style="background:${c}" class="${c===p.corCabelo?'on':''}" onclick="me().corCabelo='${c}';save();telaAvatar()"></button>`).join('')}</div>
+  </div>
+  <div class="card"><div class="sec" style="margin-top:0">🚪 Meu armário</div>${armario}</div>
+  <button class="btn warm" onclick="telaLoja('roupa')">🛍️ Ir à lojinha</button>
+  <button class="btn alt" onclick="telaCofrinho()">🐷 Meu cofrinho</button>`;
+}
+function vestir(cat, id){ me().eq[cat] = id; save(); telaAvatar(); }
+
+// ---------- TELA: LOJINHA ----------
+let catLoja = 'roupa', lojaTodos = false;
+function telaLoja(cat){
+  const p = me(); garantir(p); catLoja = cat || catLoja;
+  const cards = ITENS.filter(i => i.cat === catLoja && i.p > 0 && (lojaTodos || !i.g || i.g === p.genero)).map(i => {
+    const tem = p.itens.includes(i.id), usando = p.eq[i.cat] === i.id, pode = p.moedas >= i.p, meta = p.meta === i.id;
+    return `<div class="tile" style="align-items:center;text-align:center;min-height:0;padding:10px">
+      ${avatarSVG(p, {[i.cat]:i.id}, 110)}
+      <b style="margin-top:6px">${i.n}</b>
+      ${tem ? (usando ? `<span class="muted">✅ Usando</span>${OPCIONAIS.includes(i.cat)?`<button class="chip" style="margin-top:4px" onclick="me().eq['${i.cat}']=null;save();telaLoja()">Tirar</button>`:''}`
+                      : `<button class="chip on" style="margin-top:4px" onclick="me().eq['${i.cat}']='${i.id}';save();telaLoja()">Usar</button>`)
+            : `<button class="chip" style="margin-top:4px;${pode?'border-color:var(--ok);background:#e6f8ef':''}" onclick="comprar('${i.id}')">🪙 ${i.p}</button>
+               <button class="speak" style="margin-top:4px;font-size:13px" onclick="definirMeta('${i.id}')">${meta?'🎯 É minha meta':'🎯 Virar meta'}</button>`}
+    </div>`;
+  }).join('');
+  app.innerHTML = `${topo('🛍️ Lojinha', 'telaInicio()')}
+  <div class="card" style="display:flex;gap:10px;align-items:center;justify-content:space-between;padding:12px 14px">
+    <div><b style="font-size:22px">🪙 ${p.moedas}</b><br><span class="muted">na carteira</span></div>
+    <div><b style="font-size:22px">🐷 ${p.cofrinho}</b><br><span class="muted">no cofrinho</span></div>
+    <button class="speak" onclick="telaCofrinho()">Ver cofrinho</button>
+  </div>
+  <div class="row" style="gap:6px;margin-bottom:12px">${CATS.map(([c,e,n])=>`<button class="chip ${c===catLoja?'on':''}" style="padding:6px 10px" onclick="telaLoja('${c}')">${e} ${n}</button>`).join('')}</div>
+  <div class="row" style="margin-bottom:10px"><button class="chip ${lojaTodos?'':'on'}" onclick="lojaTodos=false;telaLoja()">${p.genero==='menina'?'👧 Para menina':'👦 Para menino'}</button><button class="chip ${lojaTodos?'on':''}" onclick="lojaTodos=true;telaLoja()">👀 Ver todos</button></div>
+  <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))">${cards || '<p class="muted">Nada aqui — toque em 👀 Ver todos.</p>'}</div>
+  <div class="tip" style="margin-top:14px">💡 ${pick(DICAS)}</div>`;
+}
+function comprar(id){
+  const p = me(), i = item(id);
+  if(p.moedas >= i.p){
+    const aviso = p.meta && p.meta !== id ? `<div class="tip">🎯 Lembrete: sua meta é <b>${item(p.meta).n}</b> (🪙 ${item(p.meta).p}). Se comprar agora, ela fica mais longe.</div>` : '';
+    abrirModal(`<div style="display:flex;gap:12px;align-items:center">${avatarSVG(p,{[i.cat]:i.id},90)}<div class="q" style="margin:0">Comprar ${i.n}?</div></div>
+      <table style="font-size:18px;margin:12px 0">
+        <tr><td>Você tem</td><td style="text-align:right"><b>🪙 ${p.moedas}</b></td></tr>
+        <tr><td>Preço</td><td style="text-align:right;color:var(--bad)"><b>− ${i.p}</b></td></tr>
+        <tr><td>Vai sobrar</td><td style="text-align:right"><b>🪙 ${p.moedas - i.p}</b></td></tr>
+      </table>
+      <div class="tip">🤔 Você <b>precisa</b> ou só <b>quer</b>? Tudo bem querer — só pense antes de gastar.</div>${aviso}
+      <button class="btn go" onclick="confirmarCompra('${id}')">Sim, comprar!</button>
+      <button class="btn alt" onclick="fecharModal()">Vou pensar melhor</button>`);
+  } else {
+    const falta = i.p - p.moedas;
+    const cofre = p.cofrinho >= falta ? `<div class="tip">🐷 Você tem <b>${p.cofrinho}</b> no cofrinho. Dá para retirar, mas aí ele para de render. Vale a pena?</div>` : '';
+    abrirModal(`<div class="q">Ainda não dá 😅</div>
+      <p style="font-size:18px">Faltam <b>🪙 ${falta}</b> para comprar <b>${i.n}</b>.<br>São mais ou menos <b>${Math.ceil(falta/2)} acertos</b> nos jogos!</p>${cofre}
+      <button class="btn warm" onclick="definirMeta('${id}');fecharModal()">🎯 Fazer disso minha meta</button>
+      <button class="btn" onclick="fecharModal();telaInicio()">🎮 Ir jogar para ganhar</button>
+      <button class="btn alt" onclick="fecharModal()">Fechar</button>`);
+  }
+}
+function confirmarCompra(id){
+  const p = me(), i = item(id);
+  if(p.moedas < i.p) return fecharModal();
+  p.moedas -= i.p; p.gastos += i.p; p.compras = (p.compras||0) + 1;
+  p.itens.push(id); p.eq[i.cat] = id; if(p.meta === id) p.meta = null;
+  mov('Compra: ' + i.n, -i.p, 'compra'); save(); fecharModal(); estrela('🛍️ Comprado!'); telaLoja();
+}
+function definirMeta(id){ const p = me(); p.meta = p.meta === id ? null : id; save(); if(!document.getElementById('modal')) telaLoja(); }
+
+// ---------- TELA: COFRINHO ----------
+function telaCofrinho(){
+  const p = me(); garantir(p);
+  const dias = Math.max(0, Math.ceil((p.ultRend + SEMANA - Date.now())/864e5));
+  const meta = p.meta ? item(p.meta) : null;
+  let metaHTML = `<p class="muted">Você ainda não tem meta. Na lojinha, toque em <b>🎯 Virar meta</b> no item que você mais quer.</p>`;
+  if(meta){
+    const tenho = p.moedas + p.cofrinho, pc = Math.min(100, Math.round(100*tenho/meta.p)), falta = Math.max(0, meta.p - tenho);
+    metaHTML = `<div style="display:flex;gap:12px;align-items:center">${avatarSVG(p,{[meta.cat]:meta.id},86)}
+      <div style="flex:1"><b style="font-size:19px">${meta.n}</b> · 🪙 ${meta.p}
+      <div class="bar" style="height:16px"><i style="width:${pc}%;background:var(--ok)"></i></div>
+      <span class="muted">${falta ? `Faltam 🪙 ${falta} (≈ ${Math.ceil(falta/2)} acertos)` : '🎉 Você já tem moedas suficientes!'}</span></div></div>`;
+  }
+  const ext = (p.extrato||[]).slice(-12).reverse().map(e => {
+    const cor = e.tipo === 'transf' ? 'var(--sky)' : e.v >= 0 ? 'var(--ok)' : 'var(--bad)';
+    return `<tr><td class="muted">${e.d.slice(0,5)}</td><td>${esc(e.t)}</td><td style="text-align:right;color:${cor};font-weight:800">${e.tipo==='transf'?'':e.v>=0?'+':''}${e.v}</td></tr>`;
+  }).join('');
+  app.innerHTML = `${topo('🐷 Meu cofrinho', 'telaInicio()')}
+  <div class="stat" style="grid-template-columns:1fr 1fr">
+    <div><b>🪙 ${p.moedas}</b><small>Carteira (para gastar)</small></div>
+    <div style="background:#ffeef5"><b>🐷 ${p.cofrinho}</b><small>Cofrinho (rende 10%/semana)</small></div>
+  </div>
+  <div class="card">
+    <div class="sec" style="margin-top:0">Guardar no cofrinho</div>
+    <div class="row">${[5,10].map(v=>`<button class="chip" onclick="transferir(${v})">+${v}</button>`).join('')}
+      <button class="chip" onclick="transferir(Math.floor(me().moedas/2))">Metade</button>
+      <button class="chip" onclick="transferir(me().moedas)">Tudo</button></div>
+    <div class="sec">Tirar do cofrinho</div>
+    <div class="row"><button class="chip" onclick="transferir(-5)">−5</button><button class="chip" onclick="transferir(-me().cofrinho)">Tirar tudo</button></div>
+    <div class="tip" style="margin-top:12px">📈 Próximo rendimento em <b>${dias} dia${dias===1?'':'s'}</b>${p.cofrinho?`: você vai ganhar <b>+${jurosDe(p.cofrinho)}</b> 🪙 só por ter guardado!`:'. Guarde moedas para elas crescerem!'}</div>
+  </div>
+  <div class="card"><div class="sec" style="margin-top:0">🎯 Minha meta</div>${metaHTML}
+    <button class="btn alt" style="margin-bottom:0" onclick="telaLoja('roupa')">🛍️ Ver a lojinha</button></div>
+  <div class="card"><div class="sec" style="margin-top:0">🧾 Extrato</div><table>${ext}</table></div>
+  <div class="tip">💡 ${pick(DICAS)}</div>`;
+}
+function transferir(v){
+  const p = me();
+  if(v > 0) v = Math.min(v, p.moedas); else v = -Math.min(-v, p.cofrinho);
+  if(!v) return;
+  p.moedas -= v; p.cofrinho += v; if(v > 0) p.poupado += v;
+  mov(v > 0 ? 'Guardou no cofrinho 🐷' : 'Tirou do cofrinho', Math.abs(v), 'transf');
+  save(); estrela(v > 0 ? '🐷 +' + v : '🪙 +' + (-v)); telaCofrinho();
+}
+
+// ---------- PAINEL: educação financeira ----------
+function painelFinanceiro(p){
+  garantir(p);
+  const pcGuardado = p.ganhos ? Math.round(100*p.poupado/p.ganhos) : 0;
+  const dicas = [];
+  if(p.ganhos > 20 && p.cofrinho === 0 && p.gastos > p.ganhos*0.7) dicas.push('Gasta quase tudo o que ganha e não guarda. Converse sobre separar uma parte para o cofrinho antes de comprar.');
+  if(pcGuardado >= 30) dicas.push(`Ótimo hábito: já guardou ${pcGuardado}% de tudo o que ganhou.`);
+  if(p.meta) dicas.push(`Está juntando para: <b>${item(p.meta).n}</b>. Acompanhe e comemore quando conseguir!`);
+  if(!p.compras) dicas.push('Ainda não fez compras. Ótima hora para conversar sobre "preciso x quero".');
+  return `<div class="card"><div class="sec" style="margin-top:0">💰 Educação financeira</div>
+    <div class="stat" style="margin-bottom:8px">
+      <div><b>${p.ganhos}</b><small>ganhou no total</small></div>
+      <div><b>${p.gastos}</b><small>gastou (${p.compras||0} compras)</small></div>
+      <div><b>${pcGuardado}%</b><small>do que ganhou guardou</small></div>
+    </div>
+    <p>Agora: 🪙 <b>${p.moedas}</b> na carteira · 🐷 <b>${p.cofrinho}</b> no cofrinho</p>
+    ${dicas.map(d=>`<div class="tip">${d}</div>`).join('')}
+    <p class="muted">Como funciona: cada acerto vale 2 moedas, mais bônus por rodada perfeita (+5), leitura concluída (+5), ditado (+3) e desenho (+3). O cofrinho rende 10% por semana.</p>
+    <button class="btn alt" onclick="aplicarRendimento(me(),true);telaPainel()">⏩ Simular 1 semana de rendimento (demonstração)</button></div>`;
+}
+
+// carregar vozes (alguns navegadores carregam depois)
+try{ speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices(); }catch(e){}
+DB.profiles.forEach(garantir); if(me()) aplicarRendimento(me()); save();
+me() ? telaInicio() : telaPerfis();
+</script>
+</body>
+</html>
