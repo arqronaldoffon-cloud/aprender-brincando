@@ -447,6 +447,8 @@ function telaInicio(){
   <div class="grid">
     <button class="tile" onclick="telaBiblioteca()"><span class="e">📖</span><b>Biblioteca</b><small>Ler e medir a leitura</small></button>
     <button class="tile" onclick="telaDitado()"><span class="e">✍️</span><b>Ditado</b><small>Ouvir e escrever</small></button>
+    <button class="tile" onclick="telaMundo3D()" style="border-color:var(--sky)"><span class="e">🧱</span><b>Mundo 3D</b><small>Construa em 3D com blocos</small></button>
+    <button class="tile" onclick="telaCidade()" style="border-color:var(--pop)"><span class="e">🏙️</span><b>Cidade dos Sonhos</b><small>Construa e cumpra missões</small></button>
     <button class="tile" onclick="telaDesenho('livre')"><span class="e">🎨</span><b>Desenhar</b><small>Desenho livre e temas</small></button>
     <button class="tile" onclick="telaAvatar()"><span class="e">🧍</span><b>Meu avatar</b><small>Vestir e personalizar</small></button>
     <button class="tile" onclick="telaLoja('roupa')"><span class="e">🛍️</span><b>Lojinha</b><small>Roupas, calçados e mais</small></button>
@@ -752,6 +754,10 @@ function telaPainel(){
     ${p.ditados.length?`<table><tr><th>Data</th><th>Acertos</th><th>Só acento</th></tr>${p.ditados.slice(-6).reverse().map(d=>`<tr><td>${d.d}</td><td>${d.ok}/${d.de}</td><td>${d.acento}</td></tr>`).join('')}</table>
     ${errosDit.length?`<p>Palavras para treinar: <b>${errosDit.map(esc).join(', ')}</b></p>`:''}`:'<p class="muted">Nenhum ditado ainda.</p>'}</div>
   ${p.desenhos.length?`<div class="card"><div class="sec" style="margin-top:0">🎨 Desenhos</div><div class="gal">${p.desenhos.slice().reverse().map(d=>`<img src="${d.img}" title="${esc(d.tema)}">`).join('')}</div></div>`:''}
+  <div class="card"><div class="sec" style="margin-top:0">🏙️ Cidade dos Sonhos</div>
+    <p>Missões cumpridas: <b>${(p.missoesFeitas||[]).filter(id=>missoesDoAno(p).some(m=>m.id===id)).length} de ${missoesDoAno(p).length}</b> do ${p.ano}º ano · Cidades guardadas: <b>${(p.cidades||[]).length}</b></p>
+    ${(p.cidades||[]).length?`<p class="muted">Última história: "${esc((p.cidades[p.cidades.length-1].txt||'').slice(0,140))}${(p.cidades[p.cidades.length-1].txt||'').length>140?'…':''}" (${p.cidades[p.cidades.length-1].pal} palavras; meta ${PALAVRAS_MIN[p.ano]})</p>`:''}
+    <p class="muted">Trabalha: contagem, área, perímetro e frações (Matemática), poluição e natureza (Ciências), serviços da cidade (Geografia) e escrita criativa (Português).</p></div>
   ${painelFinanceiro(p)}
   <button class="btn alt" onclick="confirmarApagar()">🗑️ Apagar dados desta criança</button>
   <p class="muted">Os dados ficam só neste aparelho/navegador.</p>`;
@@ -1102,6 +1108,543 @@ function painelFinanceiro(p){
     <p class="muted">Como funciona: cada acerto vale 2 moedas, mais bônus por rodada perfeita (+5), leitura concluída (+5), ditado (+3) e desenho (+3). O cofrinho rende 10% por semana.</p>
     <button class="btn alt" onclick="aplicarRendimento(me(),true);telaPainel()">⏩ Simular 1 semana de rendimento (demonstração)</button></div>`;
 }
+
+// =========================================================
+// CIDADE DOS SONHOS — jogo criativo de construção com missões
+// =========================================================
+const GW = 8, GH = 8;
+const PECAS = [
+ ['casa','🏠','Casa'],['predio','🏢','Prédio'],['escola','🏫','Escola'],['hospital','🏥','Hospital'],
+ ['mercado','🛒','Mercado'],['bombeiro','🚒','Bombeiros'],['fabrica','🏭','Fábrica'],['arvore','🌳','Árvore'],
+ ['jardim','🌻','Jardim'],['agua','💧','Lago'],['rua','🛣️','Rua'],['campo','⚽','Quadra'],
+ ['solar','☀️','Energia solar'],['reciclagem','♻️','Reciclagem'],['apagar','🧽','Apagar']
+];
+const FUNDO = {rua:'#a7adb5', agua:'#8fd3f7', jardim:'#d6f0c2', arvore:'#c6e9ad', campo:'#bfe6a0'};
+const pecaE = t => (PECAS.find(p => p[0] === t) || [,''])[1];
+
+const cnt = (g, t) => g.filter(c => c === t).length;
+const vizinhos = i => { const x = i % GW, y = Math.floor(i / GW), v = [];
+  if(x>0) v.push(i-1); if(x<GW-1) v.push(i+1); if(y>0) v.push(i-GW); if(y<GH-1) v.push(i+GW); return v; };
+const temVizinho = (g, i, t) => vizinhos(i).some(j => g[j] === t);
+const idx = (g, t) => g.map((c,i) => c === t ? i : -1).filter(i => i >= 0);
+function retangulo(g, t){
+  const ii = idx(g, t); if(!ii.length) return null;
+  const xs = ii.map(i => i % GW), ys = ii.map(i => Math.floor(i / GW));
+  const w = Math.max(...xs) - Math.min(...xs) + 1, h = Math.max(...ys) - Math.min(...ys) + 1;
+  return ii.length === w*h ? {w, h, area: w*h, per: 2*(w+h)} : null;
+}
+function indicadores(g){
+  const c = t => cnt(g, t);
+  const pop = c('casa')*4 + c('predio')*12;
+  const emp = c('escola')*5 + c('hospital')*8 + c('mercado')*4 + c('fabrica')*10 + c('bombeiro')*3 + c('predio')*2;
+  const nat = c('arvore')*2 + c('jardim') + c('agua') + c('campo');
+  const polu = Math.max(0, c('fabrica')*5 + c('predio') - c('reciclagem')*2 - c('solar')*2);
+  const ar = Math.max(0, Math.min(100, 60 + nat*4 - polu*6));
+  let fel = 30 + Math.min(20, (c('campo') + c('jardim'))*4) + (c('escola')?10:0) + (c('hospital')?10:0) + (c('mercado')?8:0) + (c('bombeiro')?5:0) + Math.round(ar*0.2);
+  if(pop > 0 && emp*2 < pop) fel -= 15;
+  fel = Math.max(0, Math.min(100, fel));
+  return {pop, emp, ar, fel, usados: g.filter(Boolean).length};
+}
+function dicaCidade(g){
+  const c = t => cnt(g, t), I = indicadores(g);
+  if(!I.usados) return 'Escolha uma peça embaixo e toque nos quadradinhos para construir!';
+  if(c('fabrica') && I.ar < 60) return 'Fábricas soltam fumaça e poluem o ar. Árvores, jardins, energia solar e reciclagem ajudam a limpar!';
+  if(I.pop >= 8 && !c('escola')) return 'Tem bastante criança morando aqui… onde elas vão estudar?';
+  if(I.pop >= 12 && !c('hospital')) return 'Quem cuida da saúde dos moradores? Que tal um hospital perto de uma rua?';
+  if(I.pop > 0 && I.emp*2 < I.pop) return 'Muita gente e pouco trabalho. Mercados, escolas e hospitais criam empregos.';
+  if(I.pop >= 8 && !c('mercado')) return 'Onde os moradores compram comida? Um mercado ajudaria!';
+  return 'Sua cidade está ficando incrível! Experimente outras peças.';
+}
+
+// ---------- missões (a = ano mínimo, b = ano máximo) ----------
+const MISSOES = [
+ {id:'m1', a:1,b:2, t:'Construa 3 casas 🏠 e 2 árvores 🌳.', ok:g=>cnt(g,'casa')>=3&&cnt(g,'arvore')>=2, d:'Conte devagar: 1, 2, 3 casas… e 1, 2 árvores!'},
+ {id:'m2', a:1,b:2, t:'Coloque uma escola 🏫 e um parque com 4 jardins 🌻.', ok:g=>cnt(g,'escola')>=1&&cnt(g,'jardim')>=4, d:'Escolha a peça Jardim e toque em 4 quadradinhos.'},
+ {id:'m3', a:1,b:3, t:'Faça um lago 💧 com exatamente 5 quadradinhos.', ok:g=>cnt(g,'agua')===5, d:'Conte os quadradinhos azuis. Precisam ser 5 — nem mais, nem menos.'},
+ {id:'m4', a:1,b:3, t:'Cada casa 🏠 precisa ter uma árvore 🌳 encostada (tenha pelo menos 2 casas).', ok:g=>{const c=idx(g,'casa');return c.length>=2&&c.every(i=>temVizinho(g,i,'arvore'));}, d:'"Encostada" é do lado, em cima ou embaixo — não vale na diagonal.'},
+ {id:'m5', a:1,b:5, t:'Construa um hospital 🏥 encostado numa rua 🛣️, para a ambulância chegar.', ok:g=>idx(g,'hospital').some(i=>temVizinho(g,i,'rua')), d:'Faça uma rua e coloque o hospital do lado dela.'},
+ {id:'m6', a:2,b:4, t:'Faça uma rua 🛣️ com 6 quadradinhos e 2 casas 🏠 encostadas nela.', ok:g=>cnt(g,'rua')>=6&&idx(g,'casa').filter(i=>temVizinho(g,i,'rua')).length>=2, d:'Primeiro a rua com 6 pedaços; depois as casas grudadinhas nela.'},
+ {id:'m7', a:2,b:5, t:'Tenha mais árvores 🌳 do que casas 🏠 (com pelo menos 3 casas).', ok:g=>cnt(g,'casa')>=3&&cnt(g,'arvore')>cnt(g,'casa'), d:'Se tiver 3 casas, precisa de 4 árvores ou mais. "Mais do que" quer dizer maior.'},
+ {id:'m8', a:3,b:5, t:'Tenha uma fábrica 🏭 e mantenha o Ar limpo acima de 70%.', ok:g=>cnt(g,'fabrica')>=1&&indicadores(g).ar>70, d:'Fábricas poluem. Árvores, jardins, energia solar e reciclagem compensam a poluição.'},
+ {id:'m9', a:3,b:5, t:'Chegue a 20 moradores ou mais, com empregos para pelo menos metade deles.', ok:g=>{const I=indicadores(g);return I.pop>=20&&I.emp*2>=I.pop;}, d:'Cada casa tem 4 moradores e cada prédio 12. Metade de 20 é 10 empregos.'},
+ {id:'m10',a:3,b:4, t:'Construa uma praça de jardins 🌻 em forma de retângulo com área 6.', ok:g=>{const r=retangulo(g,'jardim');return r&&r.area===6;}, d:'Área é quantos quadradinhos cabem dentro. Um retângulo de 2 por 3 tem área 6.'},
+ {id:'m11',a:4,b:5, t:'Faça um lago 💧 retangular com perímetro 12.', ok:g=>{const r=retangulo(g,'agua');return r&&r.per===12;}, d:'Perímetro é a volta toda: some os 4 lados. Um lago 2×4 tem perímetro 2+4+2+4 = 12.'},
+ {id:'m12',a:4,b:5, t:'Use pelo menos 8 quadradinhos e faça exatamente 1/4 deles ser árvore 🌳.', ok:g=>{const u=indicadores(g).usados;return u>=8&&cnt(g,'arvore')*4===u;}, d:'Se usar 12 quadradinhos, 1/4 de 12 é 3 árvores. Se usar 16, são 4 árvores.'},
+ {id:'m13',a:5,b:5, t:'Cidade sustentável: Ar limpo e Felicidade acima de 80%, com 30 moradores ou mais.', ok:g=>{const I=indicadores(g);return I.ar>80&&I.fel>80&&I.pop>=30;}, d:'Equilibre: prédios trazem moradores, natureza limpa o ar, e escola, hospital, mercado e quadras deixam todos felizes.'},
+];
+const PALAVRAS_MIN = {1:3, 2:8, 3:15, 4:25, 5:35};
+
+let CID = null, pecaSel = 'casa';
+function missoesDoAno(p){ const a = p.ano; return MISSOES.filter(m => m.a <= a && a <= m.b); }
+
+function telaCidade(modo){
+  const p = me(); garantir(p);
+  p.missoesFeitas = p.missoesFeitas || [];
+  p.cidadeAtual = p.cidadeAtual || Array(GW*GH).fill(null);
+  const lista = missoesDoAno(p);
+  const proxima = lista.find(m => !p.missoesFeitas.includes(m.id));
+  CID = {modo: modo || (proxima ? 'missao' : 'livre'), m: modo === 'livre' ? null : proxima};
+  desenharCidade();
+}
+function desenharCidade(){
+  const p = me(), g = p.cidadeAtual, I = indicadores(g), m = CID.m;
+  const feitas = missoesDoAno(p).filter(x => p.missoesFeitas.includes(x.id)).length, total = missoesDoAno(p).length;
+  const barra = (e, nome, v, max, cor) => `<div style="background:#fff;border:2px solid var(--line);border-radius:14px;padding:6px 8px">
+    <div style="font-size:14px;display:flex;justify-content:space-between"><span>${e} ${nome}</span><b>${v}${max===100?'%':''}</b></div>
+    <div class="bar" style="margin-top:3px"><i style="width:${Math.min(100, max===100?v:v*100/max)}%;background:${cor}"></i></div></div>`;
+  app.innerHTML = `${topo('🏙️ Cidade dos Sonhos', 'telaInicio()')}
+  <div class="card" style="padding:12px 14px;${m?'border-color:var(--pop)':''}">
+    ${m ? `<div class="row" style="justify-content:space-between"><span class="muted">Missão ${feitas+1} de ${total}</span><button class="speak" onclick="falarMissao()">🔊 Ouvir</button></div>
+       <div style="font-size:19px;font-weight:700;line-height:1.25;margin:4px 0">${m.t}</div>
+       <div class="row"><button class="chip on" onclick="verificarMissao()">✔️ Verificar</button><button class="chip" onclick="CID.m=null;CID.modo='livre';desenharCidade()">Construir livre</button></div>
+       <div id="fbm"></div>`
+     : `<b style="font-size:18px">🎨 Modo livre</b> <span class="muted">— construa a cidade que imaginar!</span>
+       ${missoesDoAno(p).some(x=>!p.missoesFeitas.includes(x.id))?`<div class="row" style="margin-top:6px"><button class="chip on" onclick="telaCidade('missao')">🎯 Voltar às missões</button></div>`:`<div class="muted" style="margin-top:4px">🏆 Você completou todas as missões do ${p.ano}º ano!</div>`}`}
+  </div>
+  <div id="grade" style="display:grid;grid-template-columns:repeat(${GW},1fr);gap:3px;background:#e9dfc6;padding:6px;border-radius:18px;touch-action:none;user-select:none">
+    ${g.map((c,i)=>`<div data-i="${i}" style="aspect-ratio:1;border-radius:8px;background:${c?(FUNDO[c]||'#fffdf6'):'#f7f0dc'};display:flex;align-items:center;justify-content:center;font-size:clamp(18px,6vw,30px)">${c && c!=='rua' && c!=='agua' ? pecaE(c) : c==='agua' ? '<span style="font-size:60%">〰️</span>' : ''}</div>`).join('')}
+  </div>
+  <div style="display:flex;gap:6px;overflow-x:auto;padding:10px 2px 4px">
+    ${PECAS.map(([t,e,n])=>`<button onclick="pecaSel='${t}';desenharCidade()" style="flex:none;width:64px;padding:6px 2px;border-radius:14px;background:${pecaSel===t?'#eef3ff':'#fff'};border:3px solid ${pecaSel===t?'var(--sky)':'var(--line)'}"><div style="font-size:26px;line-height:1.1">${e}</div><div style="font-size:11px;line-height:1.1">${n}</div></button>`).join('')}
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+    ${barra('👨‍👩‍👧','Moradores', I.pop, 40, 'var(--sky)')}${barra('💼','Empregos', I.emp, 40, 'var(--pop)')}
+    ${barra('🌿','Ar limpo', I.ar, 100, 'var(--ok)')}${barra('😊','Felicidade', I.fel, 100, 'var(--sun)')}
+  </div>
+  <div class="tip" style="display:flex;gap:8px;margin-top:10px"><span style="font-size:26px">🦉</span><span>${dicaCidade(g)}</span></div>
+  <button class="btn warm" onclick="telaContarCidade()">📝 Dar nome e contar a história da cidade</button>
+  <div class="row"><button class="chip" onclick="limparCidade()">🗑️ Começar de novo</button>${(p.cidades||[]).length?`<button class="chip" onclick="telaGaleriaCidades()">🖼️ Minhas cidades (${p.cidades.length})</button>`:''}</div>`;
+  ativarGrade();
+}
+function ativarGrade(){
+  const grade = document.getElementById('grade'); let pintando = false;
+  const pintar = el => { if(!el || el.dataset.i === undefined) return; const i = +el.dataset.i, p = me();
+    const novo = pecaSel === 'apagar' ? null : pecaSel; if(p.cidadeAtual[i] === novo) return;
+    p.cidadeAtual[i] = novo; el.style.background = novo ? (FUNDO[novo]||'#fffdf6') : '#f7f0dc';
+    el.innerHTML = novo && novo!=='rua' && novo!=='agua' ? pecaE(novo) : novo==='agua' ? '<span style="font-size:60%">〰️</span>' : ''; };
+  grade.onpointerdown = e => { pintando = true; grade.setPointerCapture(e.pointerId); pintar(document.elementFromPoint(e.clientX, e.clientY)); };
+  grade.onpointermove = e => { if(pintando) pintar(document.elementFromPoint(e.clientX, e.clientY)); };
+  grade.onpointerup = grade.onpointercancel = () => { if(!pintando) return; pintando = false; save(); desenharCidade(); };
+}
+function limparCidade(){ me().cidadeAtual = Array(GW*GH).fill(null); save(); desenharCidade(); }
+function falarMissao(){ if(CID.m) falar(CID.m.t.replace(/[^A-Za-zÀ-ÿ0-9 .,:\/]/g,'')); }
+function verificarMissao(){
+  const p = me(), m = CID.m; if(!m) return;
+  if(m.ok(p.cidadeAtual)){
+    p.missoesFeitas.push(m.id); p.estrelas += 3; ganhar(10, 'Missão da cidade cumprida'); save(); estrela('🏆 +10 🪙');
+    const prox = missoesDoAno(p).find(x => !p.missoesFeitas.includes(x.id));
+    document.getElementById('fbm').innerHTML = `<div class="tip" style="background:#e6f8ef;margin-top:8px"><b>Missão cumprida!</b> ⭐⭐⭐ +10 moedas<br>
+      ${prox?`<button class="chip on" style="margin-top:6px" onclick="CID.m=missoesDoAno(me()).find(x=>!me().missoesFeitas.includes(x.id));desenharCidade()">Próxima missão ➜</button>`:'🏆 Você completou todas as missões do seu ano!'}</div>`;
+  } else {
+    document.getElementById('fbm').innerHTML = `<div class="tip" style="display:flex;gap:8px;background:#eef3ff;margin-top:8px"><span style="font-size:24px">🦉</span><span>Quase lá! ${esc(m.d)}</span></div>`;
+  }
+}
+function telaContarCidade(){
+  const p = me(), min = PALAVRAS_MIN[p.ano] || 10, I = indicadores(p.cidadeAtual);
+  if(!I.usados) return abrirModal(`<div class="q">Construa algo primeiro! 🏗️</div><button class="btn" onclick="fecharModal()">Ok</button>`);
+  const ideias = ['Quem mora na sua cidade?','O que as crianças fazem depois da escola?','Qual é o lugar mais bonito?','O que deixa as pessoas felizes aí?','Se pudesse mudar uma coisa, o que seria?'];
+  app.innerHTML = `${topo('📝 História da cidade', 'desenharCidade()')}
+  ${miniCidade(p.cidadeAtual, 16)}
+  <div class="card" style="margin-top:10px">
+    <div class="sec" style="margin-top:0">Nome da cidade</div>
+    <input type="text" id="nomeCid" maxlength="30" placeholder="Ex.: Vila Arco-Íris" style="font-size:20px">
+    <div class="sec">Conte como é a sua cidade</div>
+    <div class="muted" style="margin-bottom:6px">Ideias: ${ideias.slice(0, p.ano<=2?2:5).join(' · ')}</div>
+    <textarea id="txtCid" rows="6" style="width:100%;font:inherit;font-size:18px;padding:10px;border-radius:14px;border:3px solid var(--line)" placeholder="Na minha cidade…"></textarea>
+    <div class="row" style="justify-content:space-between;margin-top:6px"><span class="muted" id="contaPal">0 palavras · meta: ${min}</span><button class="speak" onclick="falar(document.getElementById('txtCid').value||'Escreva sua história primeiro')">🔊 Ouvir meu texto</button></div>
+    <button class="btn go" onclick="salvarCidade()">💾 Guardar minha cidade</button>
+  </div>`;
+  const t = document.getElementById('txtCid');
+  t.oninput = () => { const n = t.value.trim().split(/\s+/).filter(Boolean).length; document.getElementById('contaPal').innerHTML = `${n} palavras · meta: ${min} ${n>=min?'✅':''}`; };
+}
+function miniCidade(g, cel){
+  return `<div style="display:grid;grid-template-columns:repeat(${GW},${cel}px);gap:1px;background:#e9dfc6;padding:4px;border-radius:10px;width:max-content;margin:0 auto">
+    ${g.map(c=>`<div style="width:${cel}px;height:${cel}px;border-radius:3px;background:${c?(FUNDO[c]||'#fffdf6'):'#f7f0dc'};font-size:${Math.round(cel*0.75)}px;line-height:${cel}px;text-align:center">${c&&c!=='rua'&&c!=='agua'?pecaE(c):''}</div>`).join('')}</div>`;
+}
+function salvarCidade(){
+  const p = me(), nome = document.getElementById('nomeCid').value.trim() || 'Minha cidade', txt = document.getElementById('txtCid').value.trim();
+  const n = txt.split(/\s+/).filter(Boolean).length, min = PALAVRAS_MIN[p.ano] || 10;
+  p.cidades = p.cidades || [];
+  p.cidades.push({d:hoje(), nome, txt, g:p.cidadeAtual.slice(), pal:n});
+  if(p.cidades.length > 8) p.cidades.shift();
+  let premio = 3; if(n >= min){ premio += 7; p.estrelas += 2; }
+  ganhar(premio, 'Cidade guardada' + (n >= min ? ' com história' : '')); save(); estrela('🏙️ +' + premio + ' 🪙');
+  abrirModal(`<div class="q">${esc(nome)} foi guardada! 🎉</div>
+    <p>Você escreveu <b>${n} palavras</b>${n>=min?' e bateu a meta! ✍️⭐⭐':`. A meta do ${p.ano}º ano é ${min} — da próxima vez tente escrever um pouquinho mais!`}</p>
+    <p>Ganhou <b>🪙 ${premio}</b></p>
+    <button class="btn warm" onclick="fecharModal();me().cidadeAtual=Array(GW*GH).fill(null);save();telaCidade()">🏗️ Construir outra cidade</button>
+    <button class="btn alt" onclick="fecharModal();telaGaleriaCidades()">🖼️ Ver minhas cidades</button>`);
+}
+function telaGaleriaCidades(){
+  const p = me();
+  app.innerHTML = `${topo('🖼️ Minhas cidades', 'telaCidade()')}
+  ${(p.cidades||[]).slice().reverse().map((c,k)=>`<div class="card"><b style="font-size:20px">${esc(c.nome)}</b> <span class="muted">· ${c.d} · ${c.pal} palavras</span>
+    <div style="margin:8px 0">${miniCidade(c.g, 14)}</div>
+    ${c.txt?`<p style="white-space:pre-line">${esc(c.txt)}</p><button class="speak" onclick="falar(this.dataset.t)" data-t="${esc(c.txt)}">🔊 Ouvir história</button>`:'<p class="muted">Sem história ainda.</p>'}</div>`).join('') || '<p class="muted">Nenhuma cidade guardada ainda.</p>'}`;
+}
+
+// =========================================================
+// MUNDO 3D — construção com blocos em 3D (WebGL puro, sem internet)
+// =========================================================
+const SX = 32, SY = 20, SZ = 32;
+const B = {AR:0, GRAMA:1, TERRA:2, PEDRA:3, AREIA:4, AGUA:5, TRONCO:6, FOLHAS:7, TABUA:8, TIJOLO:9, VIDRO:10, TELHA:11};
+// tx = [topo, lados, baixo] no atlas
+const BLOCOS = [null,
+ {n:'Grama', tx:[0,1,2]}, {n:'Terra', tx:[2,2,2]}, {n:'Pedra', tx:[3,3,3]}, {n:'Areia', tx:[4,4,4]},
+ {n:'Água', tx:[5,5,5], tr:1}, {n:'Tronco', tx:[7,6,7]}, {n:'Folhas', tx:[8,8,8]}, {n:'Tábua', tx:[9,9,9]},
+ {n:'Tijolo', tx:[10,10,10]}, {n:'Vidro', tx:[11,11,11], tr:1}, {n:'Telha', tx:[12,12,12]}];
+const PALETA3D = [B.TABUA, B.TIJOLO, B.VIDRO, B.TELHA, B.PEDRA, B.TRONCO, B.FOLHAS, B.GRAMA, B.TERRA, B.AREIA, B.AGUA];
+const CONSTRUCAO = [B.TABUA, B.TIJOLO, B.VIDRO, B.TELHA, B.PEDRA];
+
+// ---------- texturas procedurais (atlas 256x256, blocos de 64px) ----------
+const hsh = (x, y, s) => { const v = Math.sin(x*12.9898 + y*78.233 + s*37.719) * 43758.5453; return v - Math.floor(v); };
+function vnoise(x, y, s){ const xi = Math.floor(x), yi = Math.floor(y), xf = x-xi, yf = y-yi;
+  const u = xf*xf*(3-2*xf), v = yf*yf*(3-2*yf);
+  const a = hsh(xi,yi,s), b = hsh(xi+1,yi,s), c = hsh(xi,yi+1,s), d = hsh(xi+1,yi+1,s);
+  return a + (b-a)*u + (c-a)*v + (a-b-c+d)*u*v; }
+const fbm = (x, y, s) => vnoise(x,y,s)*0.6 + vnoise(x*2.1,y*2.1,s+1)*0.3 + vnoise(x*4.3,y*4.3,s+2)*0.1;
+const clamp255 = v => Math.max(0, Math.min(255, v|0));
+function corTile(i, x, y){
+  const n = fbm(x/9, y/9, i*7), g = hsh(x, y, i) - .5;
+  const tom = (r, gg, b, k) => [r + n*k*1.4 + g*k, gg + n*k*1.4 + g*k, b + n*k + g*k*.8, 255];
+  switch(i){
+    case 0: { const c = tom(70,135,45,40); if(hsh(x,y,99) > .93) { c[0]-=25; c[1]-=20; } return c; }
+    case 1: { const borda = 12 + Math.round(vnoise(x/3, 0, 5)*7); if(y < borda) return tom(70,135,45,40);
+              if(y < borda+2) return tom(60,95,40,25); return corTile(2, x, y); }
+    case 2: { const c = tom(112,78,52,30); if(hsh(x,y,77) > .96) { c[0]+=30; c[1]+=28; c[2]+=25; } return c; }
+    case 3: { const c = tom(118,118,122,38); const fissura = Math.abs(vnoise(x/6, y/6, 31) - .5) < .025; if(fissura) { c[0]-=40; c[1]-=40; c[2]-=40; } return c; }
+    case 4: return tom(212,195,140,22);
+    case 5: { const w = Math.sin((x + vnoise(x/8,y/8,3)*18)/5 + y/3)*.5+.5; return [40 + w*30, 105 + w*35, 185 + w*30, 175]; }
+    case 6: { const st = vnoise(x/2.5, y/14, 61); return [88 + st*35 + g*14, 62 + st*25 + g*10, 38 + st*15 + g*8, 255]; }
+    case 7: { const d = Math.hypot(x-31.5, y-31.5), anel = Math.sin(d*1.1 + vnoise(x/6,y/6,4)*3)*.5+.5;
+              return d > 29 ? [80,58,36,255] : [168 + anel*28 + g*10, 128 + anel*22 + g*8, 82 + anel*14, 255]; }
+    case 8: { const c = tom(52,112,42,55); if(hsh(x,y,13) > .85) { c[0]-=20; c[1]-=30; c[2]-=15; } return c; }
+    case 9: { const tabua = Math.floor(y/16), juntaV = (x + tabua*23) % 64 < 1;
+              if(y % 16 === 0 || juntaV) return [92,64,38,255];
+              const veio = Math.sin(x/2.2 + vnoise(x/10, y/3, tabua)*6)*.5+.5;
+              return [168 + veio*22 + g*10 - tabua*4, 124 + veio*16 + g*8, 74 + veio*10 + g*6, 255]; }
+    case 10: { const lin = Math.floor(y/16), off = lin % 2 ? 16 : 0;
+               if(y % 16 < 2 || (x + off) % 32 < 2) return [196,190,178,255].map((v,k)=>k<3?v + g*20:v);
+               const tij = hsh(Math.floor((x+off)/32), lin, 8)*24;
+               return [150 + tij + n*30 + g*16, 62 + tij*.4 + n*14 + g*8, 48 + n*10 + g*6, 255]; }
+    case 11: { if(x < 3 || y < 3 || x > 60 || y > 60) return [215,220,225,255];
+               const brilho = Math.abs((x - y) - 10) < 3 || Math.abs((x - y) - 18) < 1.5;
+               return brilho ? [255,255,255,140] : [190,225,250,60]; }
+    case 12: { const lin = Math.floor(y/12), yy = y % 12, off = lin % 2 ? 8 : 0, cx = ((x + off) % 16) - 8;
+               const curva = yy > 8 + Math.abs(cx)*.35;
+               const base = [168,58,42]; const k = curva ? -45 : (12 - yy)*2;
+               return [base[0] + k + n*20 + g*12, base[1] + k*.4 + n*8 + g*6, base[2] + k*.3 + n*6, 255]; }
+  }
+  return [255,0,255,255];
+}
+let ATLAS = null;
+function gerarAtlas(){
+  if(ATLAS) return ATLAS;
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const ctx = c.getContext('2d'), img = ctx.createImageData(256, 256);
+  for(let i = 0; i < 13; i++){
+    const ox = (i % 4)*64, oy = Math.floor(i / 4)*64;
+    for(let y = 0; y < 64; y++) for(let x = 0; x < 64; x++){
+      const [r,g,b,a] = corTile(i, x, y), k = ((oy+y)*256 + ox + x)*4;
+      img.data[k] = clamp255(r); img.data[k+1] = clamp255(g); img.data[k+2] = clamp255(b); img.data[k+3] = clamp255(a);
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+  return (ATLAS = c);
+}
+
+// ---------- mundo ----------
+const W3 = {blocos:null, gl:null};
+const ix = (x, y, z) => (y*SZ + z)*SX + x;
+const dentro = (x, y, z) => x >= 0 && y >= 0 && z >= 0 && x < SX && y < SY && z < SZ;
+const blocoEm = (x, y, z) => dentro(x,y,z) ? W3.blocos[ix(x,y,z)] : B.AR;
+const opaco = t => t && !(BLOCOS[t] && BLOCOS[t].tr);
+function gerarTerreno(){
+  const m = new Uint8Array(SX*SY*SZ), NA = 4;
+  for(let x = 0; x < SX; x++) for(let z = 0; z < SZ; z++){
+    let h = Math.round(5.6 + (fbm(x/10, z/10, 11) - .5)*6 + Math.sin(x/7)*0.8);
+    if(Math.hypot(x-9, z-22) < 5) h = Math.min(h, 2);
+    h = Math.max(1, Math.min(9, h));
+    m[ix(x,0,z)] = B.PEDRA;
+    for(let y = 1; y <= h; y++) m[ix(x,y,z)] = y === h ? (h <= NA ? B.AREIA : B.GRAMA) : (y < h-2 ? B.PEDRA : B.TERRA);
+    for(let y = h+1; y <= NA - 1; y++) m[ix(x,y,z)] = B.AGUA;
+  }
+  const arvores = [[24,6],[27,12],[6,7],[20,26],[28,27],[14,4]];
+  arvores.forEach(([x,z]) => {
+    let y = SY-1; while(y > 0 && !m[ix(x,y,z)]) y--;
+    if(m[ix(x,y,z)] !== B.GRAMA) return;
+    for(let k = 1; k <= 4; k++) m[ix(x,y+k,z)] = B.TRONCO;
+    for(let dx=-2; dx<=2; dx++) for(let dz=-2; dz<=2; dz++) for(let dy=3; dy<=6; dy++){
+      const r = Math.abs(dx) + Math.abs(dz) + Math.max(0, dy-4)*1.5;
+      if(r <= 3 && dentro(x+dx,y+dy,z+dz) && !m[ix(x+dx,y+dy,z+dz)]) m[ix(x+dx,y+dy,z+dz)] = B.FOLHAS;
+    }
+  });
+  return m;
+}
+function codificar(m){ let s = ''; for(let i = 0; i < m.length; i += 4096) s += String.fromCharCode.apply(null, m.subarray(i, i+4096)); return btoa(s); }
+function decodificar(s){ try{ const b = atob(s), m = new Uint8Array(b.length); for(let i = 0; i < b.length; i++) m[i] = b.charCodeAt(i); return m.length === SX*SY*SZ ? m : null; }catch(e){ return null; } }
+
+// ---------- malha com oclusão ambiente ----------
+const FACES = [
+ {n:[1,0,0],  c:[[1,0,1],[1,0,0],[1,1,0],[1,1,1]], l:1},
+ {n:[-1,0,0], c:[[0,0,0],[0,0,1],[0,1,1],[0,1,0]], l:1},
+ {n:[0,1,0],  c:[[0,1,1],[1,1,1],[1,1,0],[0,1,0]], l:0},
+ {n:[0,-1,0], c:[[0,0,0],[1,0,0],[1,0,1],[0,0,1]], l:2},
+ {n:[0,0,1],  c:[[0,0,1],[1,0,1],[1,1,1],[0,1,1]], l:1},
+ {n:[0,0,-1], c:[[1,0,0],[0,0,0],[0,1,0],[1,1,0]], l:1},
+];
+const UVQ = [[0,1],[1,1],[1,0],[0,0]], AOV = [0.5, 0.68, 0.84, 1];
+function construirMalha(){
+  const op = [], tr = [];
+  for(let y = 0; y < SY; y++) for(let z = 0; z < SZ; z++) for(let x = 0; x < SX; x++){
+    const t = W3.blocos[ix(x,y,z)]; if(!t) continue;
+    const info = BLOCOS[t], dest = info.tr ? tr : op;
+    for(const f of FACES){
+      const nx = x+f.n[0], ny = y+f.n[1], nz = z+f.n[2], vt = blocoEm(nx,ny,nz);
+      if(opaco(vt) || vt === t) continue;
+      if(t === B.AGUA && f.n[1] !== 1 && vt) continue;
+      const tile = info.tx[f.l], tu = (tile % 4)*0.25, tv = Math.floor(tile/4)*0.25, e = 0.6/256;
+      const eixo = f.n[0] ? 0 : f.n[1] ? 1 : 2, outros = [0,1,2].filter(a => a !== eixo);
+      const vs = f.c.map((c, k) => {
+        const d = outros.map(a => c[a] ? 1 : -1);
+        const p = [nx, ny, nz], s1 = [...p], s2 = [...p], cc = [...p];
+        s1[outros[0]] += d[0]; s2[outros[1]] += d[1]; cc[outros[0]] += d[0]; cc[outros[1]] += d[1];
+        const a = opaco(blocoEm(...s1)), b = opaco(blocoEm(...s2)), q = opaco(blocoEm(...cc));
+        const ao = AOV[a && b ? 0 : 3 - (a + b + q)];
+        let py = y + c[1]; if(t === B.AGUA && c[1] === 1 && f.n[1] === 1) py -= 0.12;
+        return [x + c[0], py, z + c[2], tu + e + UVQ[k][0]*(0.25 - 2*e), tv + e + UVQ[k][1]*(0.25 - 2*e), ...f.n, ao];
+      });
+      const ordem = vs[0][8] + vs[2][8] < vs[1][8] + vs[3][8] ? [1,2,3,1,3,0] : [0,1,2,0,2,3];
+      ordem.forEach(k => dest.push(...vs[k]));
+    }
+  }
+  return {op: new Float32Array(op), tr: new Float32Array(tr)};
+}
+
+// ---------- matemática 3D ----------
+const M4 = {
+  persp(f, a, n, fa){ const t = 1/Math.tan(f/2); return [t/a,0,0,0, 0,t,0,0, 0,0,(fa+n)/(n-fa),-1, 0,0,2*fa*n/(n-fa),0]; },
+  look(e, c, u){ let z = norm3(sub3(e,c)), x = norm3(cross3(u,z)), y = cross3(z,x);
+    return [x[0],y[0],z[0],0, x[1],y[1],z[1],0, x[2],y[2],z[2],0, -dot3(x,e),-dot3(y,e),-dot3(z,e),1]; },
+  mul(a, b){ const o = new Array(16); for(let i=0;i<4;i++) for(let j=0;j<4;j++){ let s=0; for(let k=0;k<4;k++) s += a[k*4+j]*b[i*4+k]; o[i*4+j]=s; } return o; },
+  inv(m){ const o = new Array(16), [a00,a01,a02,a03,a10,a11,a12,a13,a20,a21,a22,a23,a30,a31,a32,a33] = m;
+    const b00=a00*a11-a01*a10,b01=a00*a12-a02*a10,b02=a00*a13-a03*a10,b03=a01*a12-a02*a11,b04=a01*a13-a03*a11,b05=a02*a13-a03*a12,
+          b06=a20*a31-a21*a30,b07=a20*a32-a22*a30,b08=a20*a33-a23*a30,b09=a21*a32-a22*a31,b10=a21*a33-a23*a31,b11=a22*a33-a23*a32;
+    const det = 1/(b00*b11-b01*b10+b02*b09+b03*b08-b04*b07+b05*b06);
+    o[0]=(a11*b11-a12*b10+a13*b09)*det; o[1]=(a02*b10-a01*b11-a03*b09)*det; o[2]=(a31*b05-a32*b04+a33*b03)*det; o[3]=(a22*b04-a21*b05-a23*b03)*det;
+    o[4]=(a12*b08-a10*b11-a13*b07)*det; o[5]=(a00*b11-a02*b08+a03*b07)*det; o[6]=(a32*b02-a30*b05-a33*b01)*det; o[7]=(a20*b05-a22*b02+a23*b01)*det;
+    o[8]=(a10*b10-a11*b08+a13*b06)*det; o[9]=(a01*b08-a00*b10-a03*b06)*det; o[10]=(a30*b04-a31*b02+a33*b00)*det; o[11]=(a21*b02-a20*b04-a23*b00)*det;
+    o[12]=(a11*b07-a10*b09-a12*b06)*det; o[13]=(a00*b09-a01*b07+a02*b06)*det; o[14]=(a31*b01-a30*b03-a32*b00)*det; o[15]=(a20*b03-a21*b01+a22*b00)*det; return o; },
+  xf(m, v){ const o = [0,0,0,0]; for(let i=0;i<4;i++) o[i] = m[i]*v[0] + m[4+i]*v[1] + m[8+i]*v[2] + m[12+i]*v[3]; return o; }
+};
+const sub3 = (a,b) => [a[0]-b[0],a[1]-b[1],a[2]-b[2]], dot3 = (a,b) => a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+const cross3 = (a,b) => [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
+const norm3 = a => { const l = Math.hypot(...a) || 1; return [a[0]/l, a[1]/l, a[2]/l]; };
+
+// ---------- WebGL ----------
+const VS3 = `attribute vec3 p; attribute vec2 uv; attribute vec3 nr; attribute float ao;
+uniform mat4 vp; uniform vec3 cam; varying vec2 vUv; varying vec3 vN; varying float vAo; varying float vD;
+void main(){ vUv=uv; vN=nr; vAo=ao; vD=distance(p,cam); gl_Position=vp*vec4(p,1.0); }`;
+const FS3 = `precision mediump float; uniform sampler2D tex; uniform vec3 sol; uniform vec3 corSol; uniform vec3 amb; uniform vec3 neb; uniform float alfa;
+varying vec2 vUv; varying vec3 vN; varying float vAo; varying float vD;
+void main(){ vec4 t=texture2D(tex,vUv); if(t.a<0.05) discard;
+ float dif=max(dot(normalize(vN),sol),0.0); float lado=0.92+0.08*vN.y;
+ vec3 c=t.rgb*(amb*lado+corSol*dif)*vAo;
+ c=pow(c,vec3(0.95));
+ float f=smoothstep(26.0,62.0,vD); c=mix(c,neb,f);
+ gl_FragColor=vec4(c,t.a*alfa); }`;
+function iniciarGL(canvas){
+  const gl = canvas.getContext('webgl', {antialias:true, alpha:true, premultipliedAlpha:false});
+  if(!gl) return null;
+  const sh = (tipo, src) => { const s = gl.createShader(tipo); gl.shaderSource(s, src); gl.compileShader(s);
+    if(!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
+  const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS3)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS3)); gl.linkProgram(pr);
+  gl.useProgram(pr);
+  const tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, gerarAtlas());
+  gl.generateMipmap(gl.TEXTURE_2D);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  const L = n => gl.getAttribLocation(pr, n), U = n => gl.getUniformLocation(pr, n);
+  return {gl, pr, a:{p:L('p'), uv:L('uv'), nr:L('nr'), ao:L('ao')},
+          u:{vp:U('vp'), cam:U('cam'), sol:U('sol'), corSol:U('corSol'), amb:U('amb'), neb:U('neb'), alfa:U('alfa')},
+          bOp: gl.createBuffer(), bTr: gl.createBuffer(), nOp:0, nTr:0};
+}
+function enviarMalha(){
+  const R = W3.gl, gl = R.gl, m = construirMalha();
+  gl.bindBuffer(gl.ARRAY_BUFFER, R.bOp); gl.bufferData(gl.ARRAY_BUFFER, m.op, gl.STATIC_DRAW); R.nOp = m.op.length/9;
+  gl.bindBuffer(gl.ARRAY_BUFFER, R.bTr); gl.bufferData(gl.ARRAY_BUFFER, m.tr, gl.STATIC_DRAW); R.nTr = m.tr.length/9;
+}
+const CAM = {yaw: 0.8, pitch: 0.62, dist: 34, alvo:[16, 5, 16], noite:false};
+function matrizes(canvas){
+  const e = [CAM.alvo[0] + CAM.dist*Math.cos(CAM.pitch)*Math.sin(CAM.yaw), CAM.alvo[1] + CAM.dist*Math.sin(CAM.pitch), CAM.alvo[2] + CAM.dist*Math.cos(CAM.pitch)*Math.cos(CAM.yaw)];
+  const vp = M4.mul(M4.persp(0.9, canvas.width/canvas.height, 0.3, 200), M4.look(e, CAM.alvo, [0,1,0]));
+  return {e, vp};
+}
+function desenhar3D(){
+  const R = W3.gl; if(!R) return; const gl = R.gl, cv = gl.canvas;
+  const dpr = Math.min(2, window.devicePixelRatio || 1), w = Math.round(cv.clientWidth*dpr), h = Math.round(cv.clientHeight*dpr);
+  if(cv.width !== w || cv.height !== h){ cv.width = w; cv.height = h; }
+  gl.viewport(0, 0, w, h); gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.DEPTH_TEST); gl.disable(gl.CULL_FACE);
+  const {e, vp} = matrizes(cv);
+  const N = CAM.noite;
+  gl.uniformMatrix4fv(R.u.vp, false, vp); gl.uniform3fv(R.u.cam, e);
+  gl.uniform3fv(R.u.sol, norm3(N ? [-0.3, 0.8, 0.4] : [0.45, 0.8, 0.35]));
+  gl.uniform3fv(R.u.corSol, N ? [0.25, 0.3, 0.5] : [0.75, 0.68, 0.55]);
+  gl.uniform3fv(R.u.amb, N ? [0.16, 0.18, 0.32] : [0.48, 0.52, 0.6]);
+  gl.uniform3fv(R.u.neb, N ? [0.10, 0.13, 0.25] : [0.80, 0.89, 0.98]);
+  const bind = buf => { gl.bindBuffer(gl.ARRAY_BUFFER, buf); const s = 36;
+    gl.enableVertexAttribArray(R.a.p);  gl.vertexAttribPointer(R.a.p, 3, gl.FLOAT, false, s, 0);
+    gl.enableVertexAttribArray(R.a.uv); gl.vertexAttribPointer(R.a.uv, 2, gl.FLOAT, false, s, 12);
+    gl.enableVertexAttribArray(R.a.nr); gl.vertexAttribPointer(R.a.nr, 3, gl.FLOAT, false, s, 20);
+    gl.enableVertexAttribArray(R.a.ao); gl.vertexAttribPointer(R.a.ao, 1, gl.FLOAT, false, s, 32); };
+  gl.disable(gl.BLEND); gl.depthMask(true); gl.uniform1f(R.u.alfa, 1);
+  if(R.nOp){ bind(R.bOp); gl.drawArrays(gl.TRIANGLES, 0, R.nOp); }
+  if(R.nTr){ gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); gl.depthMask(false); gl.uniform1f(R.u.alfa, 1);
+    bind(R.bTr); gl.drawArrays(gl.TRIANGLES, 0, R.nTr); gl.depthMask(true); }
+}
+
+// ---------- mira (raio do toque até o bloco) ----------
+function mirar(cx, cy){
+  const cv = W3.gl.gl.canvas, r = cv.getBoundingClientRect();
+  const nx = ((cx - r.left)/r.width)*2 - 1, ny = 1 - ((cy - r.top)/r.height)*2;
+  const {e, vp} = matrizes(cv), inv = M4.inv(vp);
+  const a = M4.xf(inv, [nx, ny, -1, 1]), b = M4.xf(inv, [nx, ny, 1, 1]);
+  const o = [a[0]/a[3], a[1]/a[3], a[2]/a[3]], d = norm3(sub3([b[0]/b[3], b[1]/b[3], b[2]/b[3]], o));
+  let p = o.map(Math.floor), ant = null;
+  const passo = d.map(v => v > 0 ? 1 : -1), tD = d.map(v => Math.abs(1/(v || 1e-9)));
+  let tM = [0,1,2].map(k => ((d[k] > 0 ? p[k] + 1 - o[k] : o[k] - p[k]) * tD[k]));
+  for(let i = 0; i < 160; i++){
+    const t = blocoEm(...p);
+    if(t && t !== B.AGUA) return {bloco:[...p], antes:ant};
+    if(t === B.AGUA && i > 0) return {bloco:[...p], antes:ant, agua:true};
+    ant = [...p];
+    const k = tM[0] < tM[1] ? (tM[0] < tM[2] ? 0 : 2) : (tM[1] < tM[2] ? 1 : 2);
+    p[k] += passo[k]; tM[k] += tD[k];
+    if(Math.min(...tM) > 120) break;
+  }
+  return null;
+}
+
+// ---------- missões 3D ----------
+function caixa(t){
+  let mn = [99,99,99], mx = [-1,-1,-1], n = 0;
+  for(let y = 1; y < SY; y++) for(let z = 0; z < SZ; z++) for(let x = 0; x < SX; x++) if(W3.blocos[ix(x,y,z)] === t){
+    n++; [x,y,z].forEach((v,k) => { mn[k] = Math.min(mn[k], v); mx[k] = Math.max(mx[k], v); }); }
+  if(!n) return null; const dims = mn.map((v,k) => mx[k]-v+1);
+  return dims[0]*dims[1]*dims[2] === n ? dims.sort((a,b)=>a-b) : null;
+}
+const contar3D = t => { let n = 0; for(let i = SX*SZ; i < W3.blocos.length; i++) if(W3.blocos[i] === t) n++; return n; };
+function alturaTorre(){
+  let best = 0;
+  for(let x = 0; x < SX; x++) for(let z = 0; z < SZ; z++){ let run = 0;
+    for(let y = 1; y < SY; y++){ if(CONSTRUCAO.includes(W3.blocos[ix(x,y,z)])) { run++; best = Math.max(best, run); } else run = 0; } }
+  return best;
+}
+const MISSOES3D = [
+ {id:'t1', a:1, t:'Construa uma torre com 6 blocos de altura (tábua, tijolo, vidro, telha ou pedra).', ok:()=>alturaTorre()>=6, d:'Toque sempre no topo da torre para empilhar. Conte: 1, 2, 3, 4, 5, 6!'},
+ {id:'t2', a:1, t:'Construa um muro com 12 blocos de tijolo 🧱.', ok:()=>contar3D(B.TIJOLO)>=12, d:'Escolha Tijolo na barra de baixo e coloque 12 blocos. Que tal 2 fileiras de 6?'},
+ {id:'t3', a:1, t:'Use 4 materiais de construção diferentes.', ok:()=>CONSTRUCAO.filter(t=>contar3D(t)>0).length>=4, d:'Materiais de construção: tábua, tijolo, vidro, telha e pedra. Use 4 deles.'},
+ {id:'t4', a:2, t:'Construa uma casa: 12 blocos de parede (tábua ou tijolo), 1 janela de vidro e 4 telhas no telhado.', ok:()=>contar3D(B.TABUA)+contar3D(B.TIJOLO)>=12&&contar3D(B.VIDRO)>=1&&contar3D(B.TELHA)>=4, d:'Paredes primeiro, depois troque um bloco por vidro (janela) e cubra com telhas.'},
+ {id:'t5', a:3, t:'Volume! Construa um cubo de vidro 2 × 2 × 2. Quantos blocos ele tem?', ok:()=>{const c=caixa(B.VIDRO);return c&&c.join()==='2,2,2';}, d:'Um cubo 2×2×2 tem 2 camadas de 2×2 = 4 blocos cada. 4 + 4 = 8 blocos. Use só vidro nele, sem outros vidros soltos.'},
+ {id:'t6', a:4, t:'Construa um bloco de tábuas de 3 × 2 × 2 (comprimento × largura × altura).', ok:()=>{const c=caixa(B.TABUA);return c&&c.join()==='2,2,3';}, d:'Volume = 3 × 2 × 2 = 12 blocos. Faça uma camada 3×2 (6 blocos) e outra igual em cima. Sem tábuas soltas em outro lugar.'},
+];
+const missoes3dAno = p => MISSOES3D.filter(m => m.a <= p.ano);
+
+// ---------- tela ----------
+let sel3d = B.TABUA, modo3d = 'por', raf3d = 0, salvar3dT = 0;
+function telaMundo3D(){
+  const p = me(); garantir(p);
+  p.missoes3d = p.missoes3d || [];
+  W3.blocos = (p.mundo3d && decodificar(p.mundo3d)) || gerarTerreno();
+  const at = gerarAtlas().toDataURL();
+  const m = missoes3dAno(p).find(x => !p.missoes3d.includes(x.id));
+  app.innerHTML = `${topo('🧱 Mundo 3D', 'sair3D()')}
+  <div class="card" style="padding:10px 12px" id="cardM3">${cardMissao3D(m)}</div>
+  <div style="position:relative">
+    <canvas id="cv3d" style="width:100%;height:58vh;min-height:320px;border-radius:18px;border:3px solid var(--line);touch-action:none;background:${CAM.noite?'linear-gradient(#0b1026,#1a2340 70%)':'linear-gradient(#5aa9f0,#cfe6ff 70%)'};display:block"></canvas>
+    <div style="position:absolute;top:8px;left:8px;display:flex;flex-direction:column;gap:6px">
+      <button class="chip ${modo3d==='por'?'on':''}" onclick="modo3d='por';telaMundo3DHud()" id="bPor">➕ Colocar</button>
+      <button class="chip ${modo3d==='tirar'?'on':''}" onclick="modo3d='tirar';telaMundo3DHud()" id="bTirar">⛏️ Tirar</button>
+    </div>
+    <div style="position:absolute;top:8px;right:8px;display:flex;flex-direction:column;gap:6px">
+      <button class="chip" onclick="CAM.dist=Math.max(8,CAM.dist*0.8);desenhar3D()">🔍＋</button>
+      <button class="chip" onclick="CAM.dist=Math.min(60,CAM.dist*1.25);desenhar3D()">🔍－</button>
+      <button class="chip" onclick="CAM.noite=!CAM.noite;telaMundo3D()">${CAM.noite?'☀️':'🌙'}</button>
+    </div>
+    <div style="position:absolute;bottom:8px;left:8px;right:8px;text-align:center;pointer-events:none"><span style="background:rgba(255,255,255,.85);border-radius:10px;padding:3px 8px;font-size:13px">1 dedo: girar · 2 dedos: zoom e mover · toque rápido: ${modo3d==='por'?'colocar':'tirar'}</span></div>
+  </div>
+  <div style="display:flex;gap:6px;overflow-x:auto;padding:10px 2px 4px">
+    ${PALETA3D.map(t=>`<button onclick="sel3d=${t};modo3d='por';telaMundo3DHud()" data-b="${t}" class="pal3d" style="flex:none;width:64px;padding:5px 2px;border-radius:14px;background:#fff;border:3px solid ${sel3d===t&&modo3d==='por'?'var(--sky)':'var(--line)'}">
+      <div style="width:40px;height:40px;margin:0 auto;border-radius:6px;background:url(${at});background-size:400% 400%;background-position:${(BLOCOS[t].tx[1]%4)*33.333}% ${Math.floor(BLOCOS[t].tx[1]/4)*33.333}%"></div>
+      <div style="font-size:12px">${BLOCOS[t].n}</div></button>`).join('')}
+  </div>
+  <div class="row"><button class="chip" onclick="novoMundo3D()">🌍 Mundo novo</button><span class="muted" id="info3d"></span></div>`;
+  const cv = document.getElementById('cv3d');
+  try{ W3.gl = iniciarGL(cv); }catch(e){ W3.gl = null; }
+  if(!W3.gl){ cv.outerHTML = '<div class="tip">Este aparelho não conseguiu abrir o modo 3D (WebGL). Tente em outro navegador ou celular.</div>'; return; }
+  enviarMalha(); controles3D(cv); atualizarInfo3D();
+  cancelAnimationFrame(raf3d);
+  const loop = () => { if(!document.body.contains(cv)) return; desenhar3D(); raf3d = requestAnimationFrame(loop); };
+  loop();
+}
+function cardMissao3D(m){
+  const p = me(), feitas = missoes3dAno(p).filter(x => p.missoes3d.includes(x.id)).length, total = missoes3dAno(p).length;
+  if(!m) return `<b>🏆 Missões completas (${feitas}/${total})!</b> <span class="muted">Construção livre — invente o que quiser.</span>`;
+  return `<div class="row" style="justify-content:space-between"><span class="muted">Missão ${feitas+1} de ${total}</span><button class="speak" onclick="falar(missoes3dAno(me()).find(x=>!me().missoes3d.includes(x.id)).t)">🔊</button></div>
+    <div style="font-size:17px;font-weight:700;line-height:1.25;margin:2px 0 6px">${m.t}</div>
+    <button class="chip on" onclick="verificar3D()">✔️ Verificar</button><div id="fb3"></div>`;
+}
+function telaMundo3DHud(){
+  document.querySelectorAll('.pal3d').forEach(b => b.style.borderColor = (+b.dataset.b === sel3d && modo3d === 'por') ? 'var(--sky)' : 'var(--line)');
+  const a = document.getElementById('bPor'), b = document.getElementById('bTirar');
+  if(a){ a.classList.toggle('on', modo3d === 'por'); b.classList.toggle('on', modo3d === 'tirar'); }
+}
+function atualizarInfo3D(){
+  const el = document.getElementById('info3d'); if(!el) return;
+  const n = CONSTRUCAO.reduce((s,t) => s + contar3D(t), 0);
+  el.textContent = `Blocos de construção: ${n} · Torre mais alta: ${alturaTorre()}`;
+}
+function controles3D(cv){
+  const ptrs = new Map(); let ini = null, mov = 0, pinch = null;
+  cv.onpointerdown = e => { cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+    if(ptrs.size === 1){ ini = {x:e.clientX, y:e.clientY, t:Date.now()}; mov = 0; } else { ini = null; pinch = null; } };
+  cv.onpointermove = e => { if(!ptrs.has(e.pointerId)) return; const [px, py] = ptrs.get(e.pointerId); const dx = e.clientX - px, dy = e.clientY - py;
+    ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+    if(ptrs.size === 1){ mov += Math.abs(dx) + Math.abs(dy); if(mov > 8){ CAM.yaw -= dx*0.009; CAM.pitch = Math.max(0.12, Math.min(1.45, CAM.pitch + dy*0.007)); } }
+    else if(ptrs.size === 2){ const [a, b] = [...ptrs.values()], d = Math.hypot(a[0]-b[0], a[1]-b[1]), mx = (a[0]+b[0])/2, my = (a[1]+b[1])/2;
+      if(pinch){ CAM.dist = Math.max(8, Math.min(60, CAM.dist * pinch.d / d));
+        const s = CAM.dist*0.0022, cy = Math.cos(CAM.yaw), sy = Math.sin(CAM.yaw), ddx = mx - pinch.x, ddy = my - pinch.y;
+        CAM.alvo[0] = Math.max(0, Math.min(SX, CAM.alvo[0] - (cy*ddx + sy*ddy)*s));
+        CAM.alvo[2] = Math.max(0, Math.min(SZ, CAM.alvo[2] - (-sy*ddx + cy*ddy)*s)); }
+      pinch = {d, x:mx, y:my}; } };
+  const fim = e => { if(ptrs.size === 1 && ini && mov <= 8 && Date.now() - ini.t < 600) tocar3D(e.clientX, e.clientY);
+    ptrs.delete(e.pointerId); if(ptrs.size < 2) pinch = null; if(!ptrs.size) ini = null; };
+  cv.onpointerup = fim; cv.onpointercancel = e => { ptrs.delete(e.pointerId); pinch = null; ini = null; };
+  cv.onwheel = e => { e.preventDefault(); CAM.dist = Math.max(8, Math.min(60, CAM.dist*(1 + e.deltaY*0.001))); };
+}
+function tocar3D(cx, cy){
+  const h = mirar(cx, cy); if(!h) return;
+  if(modo3d === 'tirar'){ if(h.bloco[1] === 0) return; W3.blocos[ix(...h.bloco)] = h.agua ? B.AR : B.AR; }
+  else { const alvo = h.agua ? h.bloco : h.antes; if(!alvo || !dentro(...alvo)) return; W3.blocos[ix(...alvo)] = sel3d; }
+  enviarMalha(); atualizarInfo3D();
+  clearTimeout(salvar3dT); salvar3dT = setTimeout(() => { me().mundo3d = codificar(W3.blocos); save(); }, 600);
+}
+function verificar3D(){
+  const p = me(), m = missoes3dAno(p).find(x => !p.missoes3d.includes(x.id)); if(!m) return;
+  const fb = document.getElementById('fb3');
+  if(m.ok()){ p.missoes3d.push(m.id); p.estrelas += 3; ganhar(10, 'Missão do Mundo 3D'); p.mundo3d = codificar(W3.blocos); save(); estrela('🏆 +10 🪙');
+    const prox = missoes3dAno(p).find(x => !p.missoes3d.includes(x.id));
+    document.getElementById('cardM3').innerHTML = `<div class="tip" style="background:#e6f8ef;margin:0"><b>Missão cumprida!</b> ⭐⭐⭐ +10 moedas</div>` + cardMissao3D(prox);
+  } else fb.innerHTML = `<div class="tip" style="display:flex;gap:8px;background:#eef3ff;margin-top:8px"><span style="font-size:22px">🦉</span><span>Quase lá! ${esc(m.d)}</span></div>`;
+}
+function novoMundo3D(){
+  abrirModal(`<div class="q">Começar um mundo novo?</div><p>A construção atual será apagada.</p>
+    <button class="btn warm" onclick="fecharModal();me().mundo3d=null;save();telaMundo3D()">Sim, mundo novo</button>
+    <button class="btn alt" onclick="fecharModal()">Cancelar</button>`);
+}
+function sair3D(){ cancelAnimationFrame(raf3d); if(W3.blocos){ me().mundo3d = codificar(W3.blocos); save(); } W3.gl = null; telaInicio(); }
 
 // carregar vozes (alguns navegadores carregam depois)
 try{ speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices(); }catch(e){}
